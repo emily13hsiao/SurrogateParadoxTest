@@ -1,2 +1,0 @@
-batch.num <- 6
-source("diabetes-example-monotonicity.R")
