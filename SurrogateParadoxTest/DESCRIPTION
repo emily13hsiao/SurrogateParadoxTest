@@ -1,0 +1,10 @@
+Package: SurrogateParadoxTest
+Type: Package
+Title: Empirical Testing of Surrogate Paradox Assumptions
+Version: 1.0
+Date: 2024-09-08
+Author: Emily Hsiao
+Maintainer: Emily Hsiao <ehsiao@utexas.edu>
+Description: Provides functions to nonparametrically assess assumptions necessary to prevent the surrogate paradox through hypothesis tests of stochastic dominance, monotonicity of regression functions, and non-negative residual treatment effects. More details are available in Hsiao et al 2024 (under review).
+License: GPL
+Imports: stats, parallel

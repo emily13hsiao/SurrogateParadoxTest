@@ -1,0 +1,25 @@
+# Running package version of a3 on diabetes data locally
+
+set.seed(100)
+data <- read.csv("HBA1.csv")[,-1]
+library(tidyverse)
+source("test-script-2024-09-18.R")
+
+s0 <- filter(data, treatment == 0)$surrogate
+s1 <- filter(data, treatment == 1)$surrogate
+y0 <- filter(data, treatment == 0)$outcome
+y1 <- filter(data, treatment == 1)$outcome
+
+nnr_result <- test_assumptions(s0 = s0, y0 = y0, s1 = s1, y1 = y1, type = "nnr")
+saveRDS(nnr_result, "./diabetes-data/nnr_result_local.RDS")
+
+data_chdl <- read.csv("CHDL.csv")[,-1]
+s0 <- filter(data_chdl, treatment == 0)$surrogate
+s1 <- filter(data_chdl, treatment == 1)$surrogate
+y0 <- filter(data_chdl, treatment == 0)$outcome
+y1 <- filter(data_chdl, treatment == 1)$outcome
+
+chdl_a3 <- test_assumptions(s0 = s0, y0 = y0, s1 = s1, y1 = y1, type = "nnr", direction = "negative")
+chdl_a3
+
+saveRDS(chdl_a3, "./diabetes-data/nnr_result_chdl_local.RDS")

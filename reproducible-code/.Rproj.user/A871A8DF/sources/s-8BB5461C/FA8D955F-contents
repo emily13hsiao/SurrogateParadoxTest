@@ -1,0 +1,85 @@
+# Script to write the simulations
+
+source("test-script.R")
+source("generate-data.R")
+
+###############################################################################
+#############################      Settings      ##############################
+###############################################################################
+set.seed(batch.num)
+n <- 500
+n.iter <- 10
+bandwidth.exp <- -0.1
+# and there is a batch.num
+
+###############################################################################
+###########################      Assumption 1      ############################
+###############################################################################
+
+print("STOCHASTIC DOMINANCE ASSUMPTION")
+
+for (setting in 1:9) {
+  print(paste("Setting", toString(setting)))
+  sd_results <- list()
+  for (iter in 1:n.iter) {
+    print(iter)
+    data <- a1.data(n, setting)
+    test_result <- test_assumptions(s0 = data$s0, s1 = data$s1, type = "sd")
+    sd_results[[iter]] <- test_result$sd_result
+  }
+  filename <- paste0("./bandwidth", toString(bandwidth.exp), "/sd/setting",
+                     toString(setting), "batch", toString(batch.num), ".RDS")
+  saveRDS(sd_results, file = filename)
+}
+
+###############################################################################
+###########################      Assumption 2      ############################
+###############################################################################
+
+calculate_bandwidth <- function(s) {
+  bw.nrd(s) * length(s)^(bandwidth.exp)
+}
+
+print("MONOTONICITY ASSUMPTION")
+
+settings <- c("decreasing", "flat", "increasing", "hall", "parabola")
+for (setting in settings) {
+  print(setting)
+  monotonicity_results <- list()
+  for (iter in 1:n.iter) {
+    print(iter)
+    data <- a2.data(n, setting)
+    test_result <- test_assumptions(s0 = data$x, y0 = data$y, type = "monotonicity")
+    monotonicity_results[[iter]] <- test_result$monotonicity_result
+  }
+  filename <- paste0("./bandwidth", toString(bandwidth.exp), "/monotonicity/setting",
+                     setting, "batch", toString(batch.num), ".RDS")
+  saveRDS(monotonicity_results, file = filename)
+}
+
+###############################################################################
+###########################      Assumption 3      ############################
+###############################################################################
+
+print("NNR ASSUMPTION")
+
+for (setting in 1:9) {
+  print(paste("Setting", toString(setting)))
+  nnr_results <- list()
+  for (iter in 1:n.iter) {
+    print(iter)
+    data <- a3.data(n, setting)
+    test_result <- test_assumptions(s0 = data$s0, y0 = data$y0,
+                                    s1 = data$s1, y1 = data$y1,
+                                    type = "nnr")
+    nnr_results[[iter]] <- test_result$nnr_result
+  }
+  filename <- paste0("./bandwidth", toString(bandwidth.exp), "/nnr/setting",
+                     toString(setting), "batch", toString(batch.num), ".RDS")
+  saveRDS(nnr_results, file = filename)
+}
+
+
+
+
+

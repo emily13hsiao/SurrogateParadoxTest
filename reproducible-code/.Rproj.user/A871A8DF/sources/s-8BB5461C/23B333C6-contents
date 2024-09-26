@@ -1,0 +1,24 @@
+# Run tests control
+
+library(tidyverse)
+source("test-scripts.R")
+
+filter95 <- TRUE
+
+df <- read.csv("clean_dataset.csv") %>% data.frame
+
+control_df <- filter(df, treatment == 0)
+
+if (filter95) {
+  # Filter to just the inner 95% of the data for s values
+  lower_s <- quantile(control_df$s, 0.025)
+  upper_s <- quantile(control_df$s, 0.975)
+  control_df <- control_df %>% filter(s > lower_s, s < upper_s)
+}
+
+
+control_mono_result <- monotonicity_test(control_df$s, control_df$y,
+                                           bootstrap_n = 10)
+print(control_mono_result)
+
+

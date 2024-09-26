@@ -1,0 +1,3 @@
+importFrom(stats, bw.nrd, lm, quantile, ecdf)
+importFrom(parallel, makeCluster, detectCores, clusterExport, parLapply, stopCluster)
+export("test_assumptions")

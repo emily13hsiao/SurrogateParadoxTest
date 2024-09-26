@@ -1,0 +1,140 @@
+* using log directory ‘/Users/emilyhsiao/Desktop/surrogate-markers/reproducible-code/SurrogateParadoxTest.Rcheck’
+* using R version 4.2.2 (2022-10-31)
+* using platform: aarch64-apple-darwin20 (64-bit)
+* using session charset: UTF-8
+* using option ‘--as-cran’
+* checking for file ‘SurrogateParadoxTest/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘SurrogateParadoxTest’ version ‘1.0’
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: ‘Emily Hsiao <ehsiao@utexas.edu>’
+
+New submission
+
+The build time stamp is missing.
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking serialization versions ... OK
+* checking whether package ‘SurrogateParadoxTest’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for future file timestamps ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Checking should be performed on sources prepared by ‘R CMD build’.
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking examples ... OK
+* checking PDF version of manual ... OK
+* checking HTML version of manual ... NOTE
+Found the following problems:
+Q.Rd:4:1: Warning: <link> inserting "type" attribute
+Q.Rd:12:1: Warning: <script> proprietary attribute "onload"
+Q.Rd:12:1: Warning: <script> inserting "type" attribute
+Q.Rd:17:1: Warning: <table> lacks "summary" attribute
+Q.Rd:37:1: Warning: <table> lacks "summary" attribute
+S.Rd:4:1: Warning: <link> inserting "type" attribute
+S.Rd:12:1: Warning: <script> proprietary attribute "onload"
+S.Rd:12:1: Warning: <script> inserting "type" attribute
+S.Rd:17:1: Warning: <table> lacks "summary" attribute
+S.Rd:37:1: Warning: <table> lacks "summary" attribute
+T_m.Rd:4:1: Warning: <link> inserting "type" attribute
+T_m.Rd:12:1: Warning: <script> proprietary attribute "onload"
+T_m.Rd:12:1: Warning: <script> inserting "type" attribute
+T_m.Rd:17:1: Warning: <table> lacks "summary" attribute
+T_m.Rd:37:1: Warning: <table> lacks "summary" attribute
+T_m.Rd:61:1: Warning: <table> lacks "summary" attribute
+a_b_hat.Rd:4:1: Warning: <link> inserting "type" attribute
+a_b_hat.Rd:12:1: Warning: <script> proprietary attribute "onload"
+a_b_hat.Rd:12:1: Warning: <script> inserting "type" attribute
+a_b_hat.Rd:17:1: Warning: <table> lacks "summary" attribute
+a_b_hat.Rd:37:1: Warning: <table> lacks "summary" attribute
+a_b_hat.Rd:67:1: Warning: <table> lacks "summary" attribute
+barrett_donald_cutoff.Rd:4:1: Warning: <link> inserting "type" attribute
+barrett_donald_cutoff.Rd:12:1: Warning: <script> proprietary attribute "onload"
+barrett_donald_cutoff.Rd:12:1: Warning: <script> inserting "type" attribute
+barrett_donald_cutoff.Rd:17:1: Warning: <table> lacks "summary" attribute
+barrett_donald_cutoff.Rd:37:1: Warning: <table> lacks "summary" attribute
+barrett_donald_p.Rd:4:1: Warning: <link> inserting "type" attribute
+barrett_donald_p.Rd:12:1: Warning: <script> proprietary attribute "onload"
+barrett_donald_p.Rd:12:1: Warning: <script> inserting "type" attribute
+barrett_donald_p.Rd:17:1: Warning: <table> lacks "summary" attribute
+barrett_donald_p.Rd:37:1: Warning: <table> lacks "summary" attribute
+calculate_bandwidth.Rd:4:1: Warning: <link> inserting "type" attribute
+calculate_bandwidth.Rd:12:1: Warning: <script> proprietary attribute "onload"
+calculate_bandwidth.Rd:12:1: Warning: <script> inserting "type" attribute
+calculate_bandwidth.Rd:17:1: Warning: <table> lacks "summary" attribute
+calculate_bandwidth.Rd:37:1: Warning: <table> lacks "summary" attribute
+gaussian_kernel.Rd:4:1: Warning: <link> inserting "type" attribute
+gaussian_kernel.Rd:12:1: Warning: <script> proprietary attribute "onload"
+gaussian_kernel.Rd:12:1: Warning: <script> inserting "type" attribute
+gaussian_kernel.Rd:17:1: Warning: <table> lacks "summary" attribute
+gaussian_kernel.Rd:37:1: Warning: <table> lacks "summary" attribute
+modified_S_stat.Rd:4:1: Warning: <link> inserting "type" attribute
+modified_S_stat.Rd:12:1: Warning: <script> proprietary attribute "onload"
+modified_S_stat.Rd:12:1: Warning: <script> inserting "type" attribute
+modified_S_stat.Rd:17:1: Warning: <table> lacks "summary" attribute
+modified_S_stat.Rd:37:1: Warning: <table> lacks "summary" attribute
+modified_S_stat.Rd:91:1: Warning: <table> lacks "summary" attribute
+monotonicity_test.Rd:4:1: Warning: <link> inserting "type" attribute
+monotonicity_test.Rd:12:1: Warning: <script> proprietary attribute "onload"
+monotonicity_test.Rd:12:1: Warning: <script> inserting "type" attribute
+monotonicity_test.Rd:17:1: Warning: <table> lacks "summary" attribute
+monotonicity_test.Rd:38:1: Warning: <table> lacks "summary" attribute
+monotonicity_test.Rd:86:1: Warning: <table> lacks "summary" attribute
+nnr_test.Rd:4:1: Warning: <link> inserting "type" attribute
+nnr_test.Rd:12:1: Warning: <script> proprietary attribute "onload"
+nnr_test.Rd:12:1: Warning: <script> inserting "type" attribute
+nnr_test.Rd:17:1: Warning: <table> lacks "summary" attribute
+nnr_test.Rd:37:1: Warning: <table> lacks "summary" attribute
+nnr_test.Rd:79:1: Warning: <table> lacks "summary" attribute
+sd_test.Rd:4:1: Warning: <link> inserting "type" attribute
+sd_test.Rd:12:1: Warning: <script> proprietary attribute "onload"
+sd_test.Rd:12:1: Warning: <script> inserting "type" attribute
+sd_test.Rd:17:1: Warning: <table> lacks "summary" attribute
+sd_test.Rd:37:1: Warning: <table> lacks "summary" attribute
+sd_test.Rd:61:1: Warning: <table> lacks "summary" attribute
+smoother_fitter.Rd:4:1: Warning: <link> inserting "type" attribute
+smoother_fitter.Rd:12:1: Warning: <script> proprietary attribute "onload"
+smoother_fitter.Rd:12:1: Warning: <script> inserting "type" attribute
+smoother_fitter.Rd:17:1: Warning: <table> lacks "summary" attribute
+smoother_fitter.Rd:37:1: Warning: <table> lacks "summary" attribute
+test_assumptions.Rd:4:1: Warning: <link> inserting "type" attribute
+test_assumptions.Rd:12:1: Warning: <script> proprietary attribute "onload"
+test_assumptions.Rd:12:1: Warning: <script> inserting "type" attribute
+test_assumptions.Rd:17:1: Warning: <table> lacks "summary" attribute
+test_assumptions.Rd:42:1: Warning: <table> lacks "summary" attribute
+test_assumptions.Rd:124:1: Warning: <table> lacks "summary" attribute
+* checking for non-standard things in the check directory ... OK
+* checking for detritus in the temp directory ... OK
+* DONE
+Status: 3 NOTEs

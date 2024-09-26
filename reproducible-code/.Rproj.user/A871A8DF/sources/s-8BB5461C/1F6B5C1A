@@ -1,0 +1,27 @@
+{
+    "id": "1F6B5C1A",
+    "path": "~/Desktop/surrogate-markers/reproducible-code/read-a3-sims.R",
+    "project_path": "read-a3-sims.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1726758461399.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "73,0",
+        "scrollLine": "46"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1727361504,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1727361504155,
+    "read_only": false,
+    "read_only_alternatives": []
+}
