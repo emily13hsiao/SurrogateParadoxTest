@@ -385,21 +385,21 @@ vector of primary outcome values in the control group, and
 <strong>y1</strong>, the vector of primary outcome values in the treated
 group. Let’s make some data, but if you have your own data, use your own
 data to define objects that will be use for the s0, s1, y0, y1
-arguements.</p>
+arguments.</p>
 <pre class="r"><code># set seed so we get the same result
 set.seed(1)
 sample.size = 100
 # generate surrogate marker in control group
 s_c &lt;- rnorm(sample.size, 3, 1)
 # defining a function of s in the control group
-m_c &lt;- function(s) 1 + (-1) * s
+m_c &lt;- function(s) 1 + 1 * s
 # generate primary outcome in the control group
 y_c &lt;- sapply(s_c, function(s) rnorm(1, m_c(s), 1))
 
 # generate surrogate marker in treated group
-s_t &lt;- rnorm(sample.size, 6, 2)
+s_t &lt;- rnorm(sample.size, 4, 2)
 # defining a function of s in the treated group
-m_t &lt;- function(s) 2 + 2 * s
+m_t &lt;- function(s) 2 + 3 * s
 # generate primary outcome in the treated group
 y_t &lt;- sapply(s_t, function(s) rnorm(1, m_t(s), 1))</code></pre>
 <p>The default is to run all 3 tests (<strong>type = “all”</strong>).
@@ -418,17 +418,17 @@ details).</p>
 <pre><code>## [1] &quot;Stochastic dominance assumption: Holds&quot;</code></pre>
 <p>Here, the results of the test indicate that the stochastic dominance
 assumption holds. Now let’s ask for all the details.</p>
-<pre class="r"><code>test_assumptions(s0 = s_c, y0 = y_t, s1 = s_t, y1 = y_t, type = &quot;sd&quot;,
+<pre class="r"><code>test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = &quot;sd&quot;,
     all_results = TRUE)</code></pre>
 <pre><code>## $result
 ## [1] &quot;Stochastic dominance assumption: Holds&quot;
 ## 
 ## $sd_result
 ## $sd_result$s_hat
-## [1] 0.0729325
+## [1] 0.58346
 ## 
 ## $sd_result$p.value
-## [1] 0.9894181
+## [1] 0.506186
 ## 
 ## $sd_result$reject
 ## [1] FALSE</code></pre>
@@ -442,38 +442,37 @@ reject the null hypothesis <strong>reject</strong>.</p>
 <p>Now let’s test montonicity; this does involve resampling, so set the
 seed so your results are reproducible. This function takes a long time
 and to speed up this tutorial, I have set
-<strong>monotonicity_bootstrap_n = 100</strong>; please do not use 100
+<strong>monotonicity_bootstrap_n = 20</strong>; please do not use 20
 with real data, use 200 or more
 i.e. <strong>monotonicity_bootstrap_n=200</strong>. We are working on
 making this faster.</p>
 <pre class="r"><code>set.seed(12)
-test_assumptions(s0 = s_c, y0 = y_t, s1 = s_t, y1 = y_t, type = &quot;monotonicity&quot;,
-    all_results = FALSE, monotonicity_bootstrap_n = 100)</code></pre>
+test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = &quot;monotonicity&quot;,
+    all_results = FALSE, monotonicity_bootstrap_n = 20)</code></pre>
 <pre><code>##   Assumption                            Result 
 ## 1 &quot;Monotonicity assumption (control)&quot;   &quot;Holds&quot;
 ## 2 &quot;Monotonicity assumption (treatment)&quot; &quot;Holds&quot;</code></pre>
 <p>These results show that the test indicates that the montonicity
-assumption holds in the treated group but does not hold in the control
-group.</p>
+assumption holds in both groups.</p>
 <p>Now let’s test the non-negative residual treatment effect assumption.
 This also involves resampling, so set the seed so your results are
 reproducible.</p>
 <pre class="r"><code>set.seed(1)
-test_assumptions(s0 = s_c, y0 = y_t, s1 = s_t, y1 = y_t, type = &quot;nnr&quot;,
+test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = &quot;nnr&quot;,
     all_results = FALSE)</code></pre>
-<pre><code>## [1] &quot;Non-negative residual treatment effect assumption: Does not hold&quot;</code></pre>
+<pre><code>## [1] &quot;Non-negative residual treatment effect assumption: Holds&quot;</code></pre>
 <p>The test indicates that the non-negative residual treatment effect
-assumption does NOT hold here.</p>
+assumption holds here.</p>
 <p>To test them all, and get all the results, use <strong>type =
 “all”</strong> or leave unspecified since “all” is the default:</p>
 <pre class="r"><code>set.seed(1)
-test_assumptions(s0 = s_c, y0 = y_t, s1 = s_t, y1 = y_t, type = &quot;all&quot;,
-    all_results = FALSE, monotonicity_bootstrap_n = 100)</code></pre>
-<pre><code>##   Assumption                               Result         
-## 1 &quot;Stochastic dominance assumption&quot;        &quot;Holds&quot;        
-## 2 &quot;Monotonicity assumption (control)&quot;      &quot;Holds&quot;        
-## 3 &quot;Monotonicity assumption (treatment)&quot;    &quot;Holds&quot;        
-## 4 &quot;Non-negative residual treatment effect&quot; &quot;Does not hold&quot;</code></pre>
+test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = &quot;all&quot;,
+    all_results = FALSE, monotonicity_bootstrap_n = 20)</code></pre>
+<pre><code>##   Assumption                               Result 
+## 1 &quot;Stochastic dominance assumption&quot;        &quot;Holds&quot;
+## 2 &quot;Monotonicity assumption (control)&quot;      &quot;Holds&quot;
+## 3 &quot;Monotonicity assumption (treatment)&quot;    &quot;Holds&quot;
+## 4 &quot;Non-negative residual treatment effect&quot; &quot;Holds&quot;</code></pre>
 <p>The package only exports the <strong>test_assumptions</strong>
 function. But there are many internal functions you may find useful. To
 get them, use three colons for example
