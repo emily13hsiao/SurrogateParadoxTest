@@ -1,10 +1,17 @@
 # Run A3: NNR simulations
 
+# Ensure the directory exists
+if (!dir.exists("./a3-results")) {
+  dir.create("./a3-results")
+}
+
+
+
 ###############################################################################
 #############################      Settings      ##############################
 ###############################################################################
 # Sample size; also 1000 and 2000
-n <- 500
+n <- 100
 
 # Acceptable values are 1:9
 setting <- 1
@@ -12,8 +19,8 @@ setting <- 1
 ###############################################################################
 ###########################      Running Sims      ############################
 ###############################################################################
-source("test-script-2024-09-16.R")
-source("generate-data-2024-09-16.R")
+source("test-script-2024-09-18.R")
+source("generate-data-2024-09-18.R")
 set.seed(batch.num)
 
 n.iter <- 10 # Because I am parallelizing 100 jobs
