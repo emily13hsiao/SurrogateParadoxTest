@@ -10,4 +10,3 @@ License: GPL
 Imports: stats, MonotonicityTest
 NeedsCompilation: no
 Packaged: 2025-01-20 19:57:26 UTC; parastlm
-Built: R 4.4.0; ; 2025-01-20 19:59:09 UTC; unix

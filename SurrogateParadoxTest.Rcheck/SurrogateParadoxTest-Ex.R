@@ -43,6 +43,10 @@ test_assumptions(
 s0 = s_c, y0 = y_t, s1 = s_t, y1 = y_t, type = "sd"
 )
 
+## No test: 
+test_assumptions(
+s0 = s_c, y0 = y_t, s1 = s_t, y1 = y_t, type = "all")
+## End(No test)
 
 
 
