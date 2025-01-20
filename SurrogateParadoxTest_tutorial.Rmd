@@ -7,7 +7,7 @@ output:
 ```{r global_options, echo=FALSE}
 knitr::opts_chunk$set(fig.width=7, warning=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60))
 ```
-We will go through an example using the main function in the **SurrogateParadoxTest** package. First, install the package from CRAN and load it. 
+We will go through an example using the main function in the **SurrogateParadoxTest** package. First, install the package from CRAN and load it. This package imports the **MonotonicityTest** package; if you see error messages about a fortran compiler, please see: https://cran.r-project.org/bin/macosx/tools/
 
 ```{r results = "hide", message=FALSE}
 #install.packages("SurrogateParadoxTest")
@@ -61,7 +61,7 @@ test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = "sd", all_result
 ```
 Truth be told, these won't make sense without seeing the manuscript. But essentially, the null hypothesis of the test is that the stochastic dominance assumption does hold. The alternative is that it is does not hold i.e., there exists some s where dominance does not hold. This gives the value of our test statistic **s_hat**, the p-value from testing this null hypothesis **p.value**, and whether we reject the null hypothesis **reject**. 
 
-Now let's test montonicity; this does involve resampling, so set the seed so your results are reproducible. This function used to be computationally inefficient but we now depend on and use the **MonotoncityTest** package which is much faster. Below, we set the number of bootstrap samples to 200 i.e., **monotonicity_bootstrap_n=200**. 
+Now let's test montonicity; this does involve resampling, so set the seed so your results are reproducible. This function used to be computationally inefficient but we now depend on and use the **MonotonicityTest** package which is much faster. Below, we set the number of bootstrap samples to 200 i.e., **monotonicity_bootstrap_n=200**. 
 
 ```{r}
 set.seed(12)
