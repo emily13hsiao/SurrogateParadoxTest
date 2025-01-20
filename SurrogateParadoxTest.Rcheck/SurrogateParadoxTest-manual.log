@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2022.1.20)  20 JAN 2025 13:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2022.1.20)  20 JAN 2025 14:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -332,8 +332,8 @@ File: l3backend-pdftex.def 2021-03-18 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count283
 \l__pdf_internal_box=\box53
 )
-(/private/var/folders/m_/rjnvrdxd5xv7bw_zz8xpwpxwjb26qg/T/RtmpY2iSdR/Rd2pdf165e
-d39955feb/Rd2.aux)
+(/private/var/folders/m_/rjnvrdxd5xv7bw_zz8xpwpxwjb26qg/T/Rtmpilb36O/Rd2pdf16e9
+7671d16d/Rd2.aux)
 \openout1 = `Rd2.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
@@ -386,10 +386,10 @@ LaTeX Info: Redefining \ref on input line 8.
 LaTeX Info: Redefining \pageref on input line 8.
 LaTeX Info: Redefining \nameref on input line 8.
 
-(/private/var/folders/m_/rjnvrdxd5xv7bw_zz8xpwpxwjb26qg/T/RtmpY2iSdR/Rd2pdf165e
-d39955feb/Rd2.out)
-(/private/var/folders/m_/rjnvrdxd5xv7bw_zz8xpwpxwjb26qg/T/RtmpY2iSdR/Rd2pdf165e
-d39955feb/Rd2.out)
+(/private/var/folders/m_/rjnvrdxd5xv7bw_zz8xpwpxwjb26qg/T/Rtmpilb36O/Rd2pdf16e9
+7671d16d/Rd2.out)
+(/private/var/folders/m_/rjnvrdxd5xv7bw_zz8xpwpxwjb26qg/T/Rtmpilb36O/Rd2pdf16e9
+7671d16d/Rd2.out)
 \@outlinefile=\write4
 \openout4 = `Rd2.out'.
 
@@ -401,26 +401,26 @@ File: t1zi4.fd 2018/01/14 T1/zi4 (Inconsolata)
 )
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
 (Font)              scaled to size 10.0pt on input line 22.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 23.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 22.
 
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 23.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 22.
 
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for U+rsfs on input line 23
+LaTeX Font Info:    Trying to load font information for U+rsfs on input line 22
 .
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/jknapltx/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 )
-(/private/var/folders/m_/rjnvrdxd5xv7bw_zz8xpwpxwjb26qg/T/RtmpY2iSdR/Rd2pdf165e
-d39955feb/Rd2.toc)
+(/private/var/folders/m_/rjnvrdxd5xv7bw_zz8xpwpxwjb26qg/T/Rtmpilb36O/Rd2pdf16e9
+7671d16d/Rd2.toc)
 \tf@toc=\write5
 \openout5 = `Rd2.toc'.
 
@@ -429,27 +429,27 @@ d39955feb/Rd2.toc)
 
 {/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
  [4] [5] [6] [7] [8] [9]
-Overfull \hbox (8.67676pt too wide) in paragraph at lines 565--566
+Overfull \hbox (8.67676pt too wide) in paragraph at lines 566--567
 []\T1/ptm/m/n/10 Detailed re-sults of mono-tonic-ity test in treat-ment group; 
 only re-turned if all_results
  []
 
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
-(Font)              scaled to size 9.0pt on input line 583.
+(Font)              scaled to size 9.0pt on input line 584.
 [10]
-(/private/var/folders/m_/rjnvrdxd5xv7bw_zz8xpwpxwjb26qg/T/RtmpY2iSdR/Rd2pdf165e
-d39955feb/Rd2.ind [11] [12
+(/private/var/folders/m_/rjnvrdxd5xv7bw_zz8xpwpxwjb26qg/T/Rtmpilb36O/Rd2pdf16e9
+7671d16d/Rd2.ind [11] [12
 
 
 ])
-(/private/var/folders/m_/rjnvrdxd5xv7bw_zz8xpwpxwjb26qg/T/RtmpY2iSdR/Rd2pdf165e
-d39955feb/Rd2.aux)
+(/private/var/folders/m_/rjnvrdxd5xv7bw_zz8xpwpxwjb26qg/T/Rtmpilb36O/Rd2pdf16e9
+7671d16d/Rd2.aux)
 Package rerunfilecheck Info: File `Rd2.out' has not changed.
 (rerunfilecheck)             Checksum: 6D1D53786C6EFD83BD5BDFAD77C4EE00;1710.
  ) 
 Here is how much of TeX's memory you used:
  9775 strings out of 478994
- 140175 string characters out of 5858184
+ 140162 string characters out of 5858184
  438991 words of memory out of 5000000
  26963 multiletter control sequences out of 15000+600000
  436983 words of font info for 69 fonts, out of 8000000 for 9000
@@ -465,7 +465,7 @@ texlive/2021/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/20
 21/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2021/texmf-d
 ist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2021/texmf-dist/fonts/
 type1/urw/times/utmri8a.pfb>
-Output written on Rd2.pdf (12 pages, 111943 bytes).
+Output written on Rd2.pdf (12 pages, 112179 bytes).
 PDF statistics:
  316 PDF objects out of 1000 (max. 8388607)
  291 compressed objects within 3 object streams

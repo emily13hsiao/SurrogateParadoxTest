@@ -10,7 +10,7 @@
 * checking for file ‘SurrogateParadoxTest/DESCRIPTION’ ... OK
 * checking extension type ... Package
 * this is package ‘SurrogateParadoxTest’ version ‘2.0’
-* checking CRAN incoming feasibility ... [5s/27s] Note_to_CRAN_maintainers
+* checking CRAN incoming feasibility ... [5s/58s] Note_to_CRAN_maintainers
 Maintainer: ‘Emily Hsiao <ehsiao@utexas.edu>’
 * checking package namespace information ... OK
 * checking package dependencies ... OK
