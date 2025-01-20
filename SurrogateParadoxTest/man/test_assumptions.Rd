@@ -8,12 +8,13 @@ Test assumptions to prevent surrogate paradox
 Tests the assumptions necessary to prevent the surrogate paradox: stochastic dominance of
 surrogate values in the treatment group over control group, monotonicity of the relationship 
 between surrogate and primary endpoint in both treatment and control group, and non-negative
-residual treatment effect of the treatment group over the control group.
+residual treatment effect of the treatment group over the control group. For computational efficiency, 
+Version 2.0 of this package uses the monotonicity_test function from the MonotonicityTest package.
 }
 \usage{
 test_assumptions(s0 = NULL, y0 = NULL, s1 = NULL, y1 = NULL, trim = 0.95, 
-alpha = 0.05, type = "all", all_results = TRUE, direction = "positive", 
-parallelize = FALSE, monotonicity_bootstrap_n = 100, nnr_bootstrap_n = 200)
+alpha = 0.05, type = "all", all_results = TRUE, direction = "positive",  
+monotonicity_bootstrap_n = 100, nnr_bootstrap_n = 200)
 }
 
 \arguments{
@@ -48,9 +49,6 @@ TRUE or FALSE; return all outputs from hypothesis tests. Defaults to TRUE.
   \item{direction}{
 Direction of the test. Defaults to "positive", which tests that the treatment group stochastically dominates the control group, that \eqn{\mu_0} and \eqn{\mu_1} are monotonically increasing, and that \eqn{\mu_0 \leq \mu_1 \forall s}. Parameter "negative" tests that the control group stochastically dominates the treatment group, that \eqn{\mu_0} and \eqn{\mu_1} are monotonically decreasing, and that \eqn{\mu_1 \leq \mu_0 \forall s}.
 }
-  \item{parallelize}{
-TRUE or FALSE. Whether to parallelize bootstrap samples of the monotonicity test.
-}
   \item{monotonicity_bootstrap_n}{
 Number of bootstrap samples for monotonicity test.
 }
@@ -70,7 +68,7 @@ Barrett, Garry F., and Stephen G. Donald. "Consistent tests for stochastic domin
 
 Hall, Peter, and Nancy E. Heckman. "Testing for monotonicity of a regression mean by calibrating for linear functions." Annals of Statistics (2000): 20-39.
 
-Hsiao, Tian, Parast. "Avoiding the Surrogate Paradox: An Empirical Framework for Assessing Assumptions." 2024 (Under Review)
+Hsiao, Tian, Parast. "Avoiding the Surrogate Paradox: An Empirical Framework for Assessing Assumptions." 2025 (Under Review)
 }
 
 \examples{
@@ -87,6 +85,10 @@ test_assumptions(
 s0 = s_c, y0 = y_t, s1 = s_t, y1 = y_t, type = "sd"
 )
 
+\donttest{
+test_assumptions(
+s0 = s_c, y0 = y_t, s1 = s_t, y1 = y_t, type = "all")
+}
 }
 
 \author{

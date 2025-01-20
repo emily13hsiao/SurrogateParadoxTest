@@ -9,7 +9,7 @@ Runs the test of monotonicity for a regression function.
 }
 \usage{
 monotonicity_test(X, Y, h = NA, m = 5, bootstrap_n = 100, 
-alpha = 0.05, parallelize = FALSE)
+alpha = 0.05)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,9 +30,6 @@ Desired number of bootstrap samples.
 }
   \item{alpha}{
 Desired alpha level of the test.
-}
-  \item{parallelize}{
-Whether to parallelize bootstrap samples.
 }
 
 }
