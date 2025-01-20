@@ -107,7 +107,7 @@ T_m <- function(m, X, Y) {
 }
 
 monotonicity_test <- function(X, Y, h = NA, m = 5, bootstrap_n = 100, 
-                              alpha = 0.05, parallelize = FALSE) {
+                              alpha = 0.05) {
   # Calculate actual T_m
   T_m_actual <- T_m(m, X, Y)
   
@@ -118,31 +118,6 @@ monotonicity_test <- function(X, Y, h = NA, m = 5, bootstrap_n = 100,
   errors <- sapply(1:n, function(i) Y[i] - g_hat(X[i]))
   T_m_samples <- rep(NA, bootstrap_n)
   
-  if (parallelize) {
-    
-    bootstrap_function <- function(i) {
-      resampled_ind <- sample(1:n, size = n, replace = TRUE)
-      resampled_errors <- errors[resampled_ind]
-      resampled_X = X[resampled_ind]
-      
-      #need to order them for the T_m function
-      new.x = resampled_X[order(resampled_X)]
-      new.y = resampled_errors[order(resampled_X)]
-      T_m_star <- T_m(m, new.x, new.y)
-      return(T_m_star$stat)
-    }
-    
-    cl <- parallel::makeCluster(parallel::detectCores())
-    parallel::clusterExport(cl, c("bootstrap_function", "T_m", "a_b_hat", "Q", "S", 
-                        "X", "Y", "n", "errors", "m"), 
-                  envir = environment())
-    T_m_samples_par <- parallel::parLapply(cl, 1:bootstrap_n, bootstrap_function)
-    parallel::stopCluster(cl)
-    
-    T_m_samples <- sapply(1:length(T_m_samples_par), 
-                          function(index) T_m_samples_par[[index]]
-    )
-  } else {
     for (i in 1:bootstrap_n) {
       resampled_ind <- sample(1:n, size = n, replace = TRUE)
       resampled_errors <- errors[resampled_ind]
@@ -153,7 +128,7 @@ monotonicity_test <- function(X, Y, h = NA, m = 5, bootstrap_n = 100,
       T_m_star <- T_m(m, new.x, new.y)
       T_m_samples[i] <- T_m_star$stat
     }
-  }
+  
   
   cutoff <- quantile(T_m_samples, 1 - alpha)
   
@@ -245,7 +220,6 @@ nnr_test <- function(s0, y0, s1, y1, n_bootstrap = 200, alpha = 0.05) {
 test_assumptions <- function(s0 = NULL, y0 = NULL, s1 = NULL, y1 = NULL, 
                              trim = 0.95, alpha = 0.05, type = "all", 
                              all_results = TRUE, direction = "positive",
-                             parallelize = FALSE, 
                              monotonicity_bootstrap_n = 100,
                              nnr_bootstrap_n = 200) {
   
@@ -294,27 +268,29 @@ test_assumptions <- function(s0 = NULL, y0 = NULL, s1 = NULL, y1 = NULL,
   # A2: monotonicity
   if (type == "monotonicity" | type == "all") {
     if (!is.null(s0) & !is.null(y0)) {
+    monotonicity0_result = 	c()
       if (direction == "positive") {
-        monotonicity0_result <- MonotonicityTest::monotonicity_test(s0, y0, m = floor(0.05 * length(s0)), boot_num = monotonicity_bootstrap_n)
+        temp <- MonotonicityTest::monotonicity_test(s0, y0, m = floor(0.05 * length(s0)), boot_num = monotonicity_bootstrap_n)
       } else {
-        monotonicity0_result <- MonotonicityTest::monotonicity_test(s0, -1 * y0, m = floor(0.05 * length(s0)), boot_num = monotonicity_bootstrap_n)
+        temp <- MonotonicityTest::monotonicity_test(s0, -1 * y0, m = floor(0.05 * length(s0)), boot_num = monotonicity_bootstrap_n)
       }
-      monotonicity0_result$T_m_value = monotonicity0_result$stat
-      monotonicity0_result$p_val = monotonicity0_result$p
-      monotonicity0_result$reject = (monotonicity0_result$p<alpha)
-      monotonicity0_result$T_m_samples = monotonicity0_result$dist
+      monotonicity0_result$T_m_value = temp$stat
+      monotonicity0_result$p_val = temp$p
+      monotonicity0_result$reject = (temp$p<alpha)
+      monotonicity0_result$T_m_samples = temp$dist
               
     }
     if (!is.null(s1) & !is.null(y1)) {
+    	monotonicity1_result = 	c()
       if (direction == "positive") {
-        monotonicity1_result <- MonotonicityTest::monotonicity_test(s1, y1, m = floor(0.05 * length(s1)), boot_num = monotonicity_bootstrap_n)
+        temp <- MonotonicityTest::monotonicity_test(s1, y1, m = floor(0.05 * length(s1)), boot_num = monotonicity_bootstrap_n)
       } else {
-        monotonicity1_result <- MonotonicityTest::monotonicity_test(s1, -1 * y1, m = floor(0.05 * length(s1)), boot_num = monotonicity_bootstrap_n)
+        temp <- MonotonicityTest::monotonicity_test(s1, -1 * y1, m = floor(0.05 * length(s1)), boot_num = monotonicity_bootstrap_n)
       }
-      monotonicity1_result$T_m_value = monotonicity1_result$stat
-      monotonicity1_result$p_val = monotonicity1_result$p
-      monotonicity1_result$reject = (monotonicity1_result$p<alpha)
-      monotonicity1_result$T_m_samples = monotonicity1_result$dist
+      monotonicity1_result$T_m_value = temp$stat
+      monotonicity1_result$p_val = temp$p
+      monotonicity1_result$reject = (temp$p<alpha)
+      monotonicity1_result$T_m_samples = temp$dist
  
     }
   }

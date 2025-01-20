@@ -20,7 +20,7 @@ sim_sd <- 0.10
 #   - "hall" = setting 4
 #   - "parabola" = setting 5
 #   - "increasing_linear" = setting 6
-setting <- "hall"
+setting <- "flat"
 
 ###############################################################################
 ###########################      Running Sims      ############################
