@@ -20,7 +20,6 @@ sim_sd <- 0.10
 #   - "hall" = setting 4
 #   - "parabola" = setting 5
 #   - "increasing_linear" = setting 1
-setting <- "parabola"
 
 ###############################################################################
 ###########################      Running Sims      ############################
@@ -30,19 +29,25 @@ source("generate-data-2024-09-18.R")
 set.seed(batch.num)
 
 n.iter <- 10 
-n <- 500
+n <- 100
 
-monotonicity_results <- list()
-for (iter in 1:n.iter) {
-  print(iter)
-  data <- a2.data(n, setting, sim_sd)
-  test_result <- test_assumptions(s0 = data$x, y0 = data$y, type = "monotonicity")
-  monotonicity_results[[iter]] <- test_result$monotonicity_result
-}
-filename <- paste0("./a2-results/", toString(setting), 
+if(n==500) {ss =""}
+if(n==250) {ss="250"}
+if(n==100) {ss="100"}
+
+for(set in c("increasing_linear", "parabola","hall", "increasing", "flat", "decreasing"))	{
+	setting <- set	
+	monotonicity_results <- list()
+	for (iter in 1:n.iter) {
+  		print(iter)
+  		data <- a2.data(n, setting, sim_sd)
+  		test_result <- test_assumptions(s0 = data$x, y0 = data$y, type = "monotonicity")
+ 		monotonicity_results[[iter]] <- test_result$monotonicity_result
+	}
+	filename <- paste0("./a2-results/", toString(setting), 
                    "sd", toString(sim_sd), 
-                   "batch", toString(batch.num), ".RDS")
+                   "batch", ss, toString(batch.num), ".RDS")
 saveRDS(monotonicity_results, file = filename)
-
+}
 
 
