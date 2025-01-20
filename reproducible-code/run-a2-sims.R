@@ -14,13 +14,13 @@ if (!dir.exists("./a2-results")) {
 sim_sd <- 0.10
 
 # Acceptable values are:
-#   - "decreasing" = setting 1
-#   - "flat" = setting 2
-#   - "increasing" = setting 3
+#   - "decreasing" = setting 6
+#   - "flat" = setting 3
+#   - "increasing" = setting 2
 #   - "hall" = setting 4
 #   - "parabola" = setting 5
-#   - "increasing_linear" = setting 6
-setting <- "flat"
+#   - "increasing_linear" = setting 1
+setting <- "parabola"
 
 ###############################################################################
 ###########################      Running Sims      ############################
