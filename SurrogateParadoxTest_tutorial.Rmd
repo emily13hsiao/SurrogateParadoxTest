@@ -7,17 +7,15 @@ output:
 ```{r global_options, echo=FALSE}
 knitr::opts_chunk$set(fig.width=7, warning=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60))
 ```
-We will go through an example using the main function in the **SurrogateParadoxTest** package. First, load the package from github with the code below. If you have never installed the package devtools, you will need to do that; see the commented out code below.
+We will go through an example using the main function in the **SurrogateParadoxTest** package. First, install the package from CRAN and load it. 
 
 ```{r results = "hide", message=FALSE}
-#install.packages("devtools")
-library(devtools)
-devtools::install_github("emily13hsiao/SurrogateParadoxTest", subdir = "SurrogateParadoxTest", build = FALSE)
+#install.packages("SurrogateParadoxTest")
 library(SurrogateParadoxTest)
 
 ```
 
-This package provides functions to nonparametrically assess assumptions necessary to prevent the surrogate paradox through hypothesis tests of stochastic dominance, monotonicity of regression functions, and non-negative residual treatment effects. More details will be available in Hsiao, Tian, Parast (2024) "Avoiding the Surrogate Paradox: An Empirical Framework for Assessing Assumptions" (under review).
+This package provides functions to nonparametrically assess assumptions necessary to prevent the surrogate paradox through hypothesis tests of stochastic dominance, monotonicity of regression functions, and non-negative residual treatment effects. More details will be available in Hsiao, Tian, Parast (2025) "Avoiding the Surrogate Paradox: An Empirical Framework for Assessing Assumptions" (under review).
 
 The main function is **test_assumptions** which tests the 3 assumptions that are sufficient to prevent the surrogate paradox: (1) stochastic dominance of
 surrogate values in the treatment group over control group, (2) monotonicity of the relationship 
@@ -63,16 +61,16 @@ test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = "sd", all_result
 ```
 Truth be told, these won't make sense without seeing the manuscript. But essentially, the null hypothesis of the test is that the stochastic dominance assumption does hold. The alternative is that it is does not hold i.e., there exists some s where dominance does not hold. This gives the value of our test statistic **s_hat**, the p-value from testing this null hypothesis **p.value**, and whether we reject the null hypothesis **reject**. 
 
-Now let's test montonicity; this does involve resampling, so set the seed so your results are reproducible. This function takes a long time and to speed up this tutorial, I have set **monotonicity_bootstrap_n = 20**; please do not use 20 with real data, use 200 or more i.e. **monotonicity_bootstrap_n=200**. We are working on making this faster.
+Now let's test montonicity; this does involve resampling, so set the seed so your results are reproducible. This function used to be computationally inefficient but we now depend on and use the **MonotoncityTest** package which is much faster. Below, we set the number of bootstrap samples to 200 i.e., **monotonicity_bootstrap_n=200**. 
 
 ```{r}
 set.seed(12)
-test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = "monotonicity", all_results = FALSE, monotonicity_bootstrap_n = 20)
+test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = "monotonicity", all_results = FALSE, monotonicity_bootstrap_n = 200)
 ```
 
 These results show that the test indicates that the montonicity assumption holds in both groups. 
 
-Now let's test the non-negative residual treatment effect assumption. This also involves resampling, so set the seed so your results are reproducible. 
+Now let's test the non-negative residual treatment effect assumption. This also involves boostrap resampling, so set the seed so your results are reproducible. 
 
 ```{r}
 set.seed(1)
@@ -85,7 +83,7 @@ To test them all, and get all the results, use **type = "all"** or leave unspeci
 
 ```{r}
 set.seed(1)
-test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = "all", all_results = FALSE, monotonicity_bootstrap_n = 20)
+test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = "all", all_results = FALSE, monotonicity_bootstrap_n = 200)
 ```
 
 The package only exports the **test_assumptions** function. But there are many internal functions you may find useful. To get them, use three colons for example **SurrogateParadoxTest:::smoother_fitter()**. 

@@ -355,20 +355,15 @@ SurrogateParadoxTest package</h1>
 
 
 <p>We will go through an example using the main function in the
-<strong>SurrogateParadoxTest</strong> package. First, load the package
-from github with the code below. If you have never installed the package
-devtools, you will need to do that; see the commented out code
-below.</p>
-<pre class="r"><code># install.packages(&#39;devtools&#39;)
-library(devtools)
-devtools::install_github(&quot;emily13hsiao/SurrogateParadoxTest&quot;,
-    subdir = &quot;SurrogateParadoxTest&quot;, build = FALSE)
+<strong>SurrogateParadoxTest</strong> package. First, install the
+package from CRAN and load it.</p>
+<pre class="r"><code># install.packages(&#39;SurrogateParadoxTest&#39;)
 library(SurrogateParadoxTest)</code></pre>
 <p>This package provides functions to nonparametrically assess
 assumptions necessary to prevent the surrogate paradox through
 hypothesis tests of stochastic dominance, monotonicity of regression
 functions, and non-negative residual treatment effects. More details
-will be available in Hsiao, Tian, Parast (2024) “Avoiding the Surrogate
+will be available in Hsiao, Tian, Parast (2025) “Avoiding the Surrogate
 Paradox: An Empirical Framework for Assessing Assumptions” (under
 review).</p>
 <p>The main function is <strong>test_assumptions</strong> which tests
@@ -440,23 +435,22 @@ the value of our test statistic <strong>s_hat</strong>, the p-value from
 testing this null hypothesis <strong>p.value</strong>, and whether we
 reject the null hypothesis <strong>reject</strong>.</p>
 <p>Now let’s test montonicity; this does involve resampling, so set the
-seed so your results are reproducible. This function takes a long time
-and to speed up this tutorial, I have set
-<strong>monotonicity_bootstrap_n = 20</strong>; please do not use 20
-with real data, use 200 or more
-i.e. <strong>monotonicity_bootstrap_n=200</strong>. We are working on
-making this faster.</p>
+seed so your results are reproducible. This function used to be
+computationally inefficient but we now depend on and use the
+<strong>MonotoncityTest</strong> package which is much faster. Below, we
+set the number of bootstrap samples to 200 i.e.,
+<strong>monotonicity_bootstrap_n=200</strong>.</p>
 <pre class="r"><code>set.seed(12)
 test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = &quot;monotonicity&quot;,
-    all_results = FALSE, monotonicity_bootstrap_n = 20)</code></pre>
+    all_results = FALSE, monotonicity_bootstrap_n = 200)</code></pre>
 <pre><code>##   Assumption                            Result 
 ## 1 &quot;Monotonicity assumption (control)&quot;   &quot;Holds&quot;
 ## 2 &quot;Monotonicity assumption (treatment)&quot; &quot;Holds&quot;</code></pre>
 <p>These results show that the test indicates that the montonicity
 assumption holds in both groups.</p>
 <p>Now let’s test the non-negative residual treatment effect assumption.
-This also involves resampling, so set the seed so your results are
-reproducible.</p>
+This also involves boostrap resampling, so set the seed so your results
+are reproducible.</p>
 <pre class="r"><code>set.seed(1)
 test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = &quot;nnr&quot;,
     all_results = FALSE)</code></pre>
@@ -467,7 +461,7 @@ assumption holds here.</p>
 “all”</strong> or leave unspecified since “all” is the default:</p>
 <pre class="r"><code>set.seed(1)
 test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = &quot;all&quot;,
-    all_results = FALSE, monotonicity_bootstrap_n = 20)</code></pre>
+    all_results = FALSE, monotonicity_bootstrap_n = 200)</code></pre>
 <pre><code>##   Assumption                               Result 
 ## 1 &quot;Stochastic dominance assumption&quot;        &quot;Holds&quot;
 ## 2 &quot;Monotonicity assumption (control)&quot;      &quot;Holds&quot;
