@@ -1,4 +1,5 @@
 # Run simulations for A2: monotonicity
+library(MonotonicityTest)
 
 # Ensure the directory exists
 if (!dir.exists("./a2-results")) {
@@ -10,25 +11,25 @@ if (!dir.exists("./a2-results")) {
 ###############################################################################
 # Desired variance for this setting.
 # Default value is 0.1, with lower variance settings they are 0.05 and 0.01
-sim_sd <- 0.01
+sim_sd <- 0.10
 
 # Acceptable values are:
-#   - "decreasing"
-#   - "flat"
-#   - "increasing"
-#   - "hall"
-#   - "parabola"
-#   - "increasing_linear"
-setting <- "increasing_linear"
+#   - "decreasing" = setting 1
+#   - "flat" = setting 2
+#   - "increasing" = setting 3
+#   - "hall" = setting 4
+#   - "parabola" = setting 5
+#   - "increasing_linear" = setting 6
+setting <- "hall"
 
 ###############################################################################
 ###########################      Running Sims      ############################
 ###############################################################################
-source("test-script-2024-09-18.R")
+source("test-script-2025-01-20.R")
 source("generate-data-2024-09-18.R")
 set.seed(batch.num)
 
-n.iter <- 10 # Because I am parallelizing 100 jobs
+n.iter <- 10 
 n <- 500
 
 monotonicity_results <- list()
