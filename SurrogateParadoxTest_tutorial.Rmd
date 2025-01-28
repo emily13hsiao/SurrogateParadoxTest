@@ -7,27 +7,30 @@ output:
 ```{r global_options, echo=FALSE}
 knitr::opts_chunk$set(fig.width=7, warning=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60))
 ```
-We will go through an example using the main function in the **SurrogateParadoxTest** package. First, install the package from CRAN and load it. This package imports the **MonotonicityTest** package; if you see error messages about a fortran compiler, please see: https://cran.r-project.org/bin/macosx/tools/
+
+# Main Functions
+
+We will go through an example using the main functions in the **SurrogateParadoxTest** package. First, install the package from CRAN and load it. This package imports the **MonotonicityTest** package; if you see error messages about a fortran compiler, please see: https://cran.r-project.org/bin/macosx/tools/ We also load **ggplot2** for plots made later in the document.
 
 ```{r results = "hide", message=FALSE}
 #install.packages("SurrogateParadoxTest")
 library(SurrogateParadoxTest)
-
+library(ggplot2)
 ```
 
 This package provides functions to nonparametrically assess assumptions necessary to prevent the surrogate paradox through hypothesis tests of stochastic dominance, monotonicity of regression functions, and non-negative residual treatment effects. More details will be available in Hsiao, Tian, Parast (2025) "Avoiding the Surrogate Paradox: An Empirical Framework for Assessing Assumptions" (under review).
 
 The main function is **test_assumptions** which tests the 3 assumptions that are sufficient to prevent the surrogate paradox: (1) stochastic dominance of
 surrogate values in the treatment group over control group, (2) monotonicity of the relationship 
-between surrogate and primary endpoint in both treatment and control group, and (3) non-negative
-residual treatment effect of the treatment group over the control group.
+between the surrogate and the primary outcome in both treatment and control groups, and (3) a non-negative
+residual treatment effect.
 
-The necessary inputs are **s0**, the vector of surrogate marker values in the control group, **s1**, the vector of surrogate marker values in the treated group, **y0**, the vector of primary outcome values in the control group, and **y1**, the vector of primary outcome values in the treated group. Let's make some data, but if you have your own data, use your own data to define objects that will be use for the s0, s1, y0, y1 arguments.
+The necessary inputs are **s0**, the vector of surrogate marker values in the control group, **s1**, the vector of surrogate marker values in the treated group, **y0**, the vector of primary outcome values in the control group, and **y1**, the vector of primary outcome values in the treated group. Let's make some data, but if you have your own data, use your own data to define objects that will be used for the s0, s1, y0, y1 arguments.
 
 ```{r}
 #set seed so we get the same result
 set.seed(1)
-sample.size=100
+sample.size=500
 #generate surrogate marker in control group
 s_c <- rnorm(sample.size, 3, 1)
 #defining a function of s in the control group
@@ -36,7 +39,7 @@ m_c <- function(s) 1 + 1 * s
 y_c <- sapply(s_c, function(s) rnorm(1, m_c(s), 1))
 
 #generate surrogate marker in treated group
-s_t <- rnorm(sample.size, 4, 2)
+s_t <- rnorm(sample.size, 4, 1)
 #defining a function of s in the treated group
 m_t <- function(s) 2 + 3 * s
 #generate primary outcome in the treated group
@@ -44,7 +47,7 @@ y_t <- sapply(s_t, function(s) rnorm(1, m_t(s), 1))
 ```
 
 
-The default is to run all 3 tests (**type = "all"**). However the user can specify only 1 of the tests by specifying **type = "sd"** for the stochastic dominance assumption, **type = "monotonicity"** for the monotonicity assumption, and **type = "nnr"** for the non-negative residual treatment effect assumption. Note that type = "monotonicity" is computationally intensive and will take time. 
+The default is to run all 3 tests (**type = "all"**). However the user can specify only 1 of the tests by specifying **type = "sd"** for the stochastic dominance assumption, **type = "monotonicity"** for the monotonicity assumption, and **type = "nnr"** for the non-negative residual treatment effect assumption. 
 
 Let's start with just testing stochastic dominance. We will use **all_results=FALSE** which says to only give the result indicating whether the assumption holds or not (omitting all the other details). 
 
@@ -70,7 +73,7 @@ test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = "monotonicity", 
 
 These results show that the test indicates that the montonicity assumption holds in both groups. 
 
-Now let's test the non-negative residual treatment effect assumption. This also involves boostrap resampling, so set the seed so your results are reproducible. 
+Now let's test the non-negative residual treatment effect assumption. This also involves bootstrap resampling, so set the seed so your results are reproducible. 
 
 ```{r}
 set.seed(1)
@@ -87,6 +90,113 @@ test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = "all", all_resul
 ```
 
 The package only exports the **test_assumptions** function. But there are many internal functions you may find useful. To get them, use three colons for example **SurrogateParadoxTest:::smoother_fitter()**. 
+
+# Visualizations 
+Next, we create visualizations that may be helpful as you test these assumptions. Below, we plot the empirical cdfs of the surrogate in each group, useful for assessing stochastic dominance. Generally, when stochastic dominance holds, we should see the red line at or above the blue line for the entire support.
+
+```{r}
+library(ggplot2)
+
+# Empirical CDFs
+F0 <- ecdf(s_c)
+F1 <- ecdf(s_t)
+
+# Define the ranges for each group
+s_c_range <- range(s_c)
+s_t_range <- range(s_t)
+
+# Define an extended range for x-axis
+s_lower <- min(s_c_range[1], s_t_range[1])
+s_upper <- max(s_c_range[2], s_t_range[2])
+interval <- (s_upper - s_lower) * 0.08
+s_lower <- s_lower - interval
+s_upper <- s_upper + interval
+
+# Create the data frame for plotting
+data_c <- data.frame(x = seq(s_c_range[1], s_c_range[2], length.out = 100))
+data_t <- data.frame(x = seq(s_t_range[1], s_t_range[2], length.out = 100))
+
+# Add y values for the empirical CDFs
+data_c$y <- F0(data_c$x)
+data_t$y <- F1(data_t$x)
+
+# Create the plot
+p <- ggplot() + 
+  geom_line(data = data_c, aes(x = x, y = y, colour = "red")) +
+  geom_line(data = data_t, aes(x = x, y = y, colour = "blue")) +
+  scale_colour_identity("Treated Group", guide = "legend", 
+                        labels = c("Control Group", "Treated Group"), 
+                        breaks = c("red", "blue")) +
+  ylab("Empirical CDF") +
+  xlab("Surrogate") +
+  ggtitle("Assessing Stochastic Dominance") +
+  theme(plot.title = element_text(hjust = -0.175))
+
+p
+
+
+```
+
+For monotonicity, the function used within our package calls a function within the **MonotonicityTest** which creates a plot with intervals flagged as violating monotonicity shown in red. We illustrate this by generating new data where the assumption is violated in a small region of the support and directly calling the internal function. The flagged points are referred to as the Critical Interval.
+
+```{r}
+set.seed(1)
+sample.size=500
+# making new data where the assumption is violated
+g_1 <- function(x, M) {
+  if (x <= 0.5) {
+    15 * (x - 0.5)^3 + M * (x - 0.5)
+  } else {
+    M * (x - 0.5)
+  }
+}
+g_2 <- function(x) exp(-250 * (x - 0.25)^2)
+make_g <- function(M) {
+  f <- function(x) g_1(x, M) - g_2(x)
+  return(f)
+}
+g <- make_g(0.3)
+s_new = runif(sample.size)
+y_new <- sapply(s_new, function(x_i) rnorm(1, g(x_i), 0.1))
+
+#apply test
+mon_result = MonotonicityTest::monotonicity_test(X=s_new, Y=y_new)
+
+#creates plot
+mon_result$plot
+#p-value for test; p<0.05 indicates that the assumption does not hold
+mon_result$p
+```
+Lastly, we plot the estimated smoothed conditional mean functions in each group, useful for assessing the NNR assumption. Generally, when the assumption holds, we should see the blue line at or above the red line for the entire support.
+
+```{r}
+# Define an extended range for x-axis
+s_lower <- min(min(s_c), min(s_t))
+s_upper <- max(max(s_c), max(s_t))
+
+# Calculating conditional mean function
+f0 <- SurrogateParadoxTest:::smoother_fitter(s_c, y_c, h = SurrogateParadoxTest:::calculate_bandwidth(s_c))
+f1 <- SurrogateParadoxTest:::smoother_fitter(s_t, y_t, h = SurrogateParadoxTest:::calculate_bandwidth(s_t))
+
+# Constructing data frame for plotting
+s_grid <- seq(s_lower, s_upper, length.out = 1000)
+yhat0 <- sapply(s_grid, f0)
+yhat1 <- sapply(s_grid, f1)
+smoothed_df <- as.data.frame(cbind(s = s_grid, yhat0, yhat1))
+
+#Plotting conditional mean functions 
+p <- ggplot(smoothed_df) + 
+  geom_path(aes(x = s, y = yhat0, color = "Control Group")) +
+  geom_path(aes(x = s, y = yhat1, color = "Treated Group")) +
+  ylab("Outcome") +
+  xlab("Surrogate") + 
+  ggtitle("Assessing NNR Assumption, Smoothed Conditional Mean Functions") +
+  scale_colour_manual(
+    name = "Group", 
+    values = c("Control Group" = "red", "Treated Group" = "blue")
+  )
+p
+```
 
 That's all for now!
 
