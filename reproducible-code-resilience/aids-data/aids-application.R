@@ -3,7 +3,7 @@ library(tidyverse)
 library(MASS)
 library(patchwork)
 source("./../functions.R")
-set.seed <- 1
+set.seed(1)
 
 # Read in data
 s0.A <- readRDS("./s0_A.RDS")
