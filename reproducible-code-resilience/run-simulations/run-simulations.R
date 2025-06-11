@@ -2,17 +2,17 @@
 library(tidyverse)
 library(SurrogateParadoxTest)
 library(MASS)
-source("./../functions.R")
+source("functions.R")
 
-setting <- 1 # Choices are: 1-10
-method <- "gp_fixed" # gp_fixed, polynomial, fourier
+setting <- 8 # Choices are: 1-10
+method <- "fourier" # gp_fixed, polynomial, fourier
 sim_reps <- 50
 n.A <- 400
 n.B <- 200
 get_var <- TRUE
 
 # Additional Settings
-if (method == "gp_fixed" | method == "gp_estimated") {
+if (method == "gp_fixed" ) {
   if (setting == 1) {
     sigma2 <- 0.3
     theta <- 5
@@ -86,7 +86,7 @@ for (jj in 1:sim_reps) {
   all_data_table[jj, ] <- row_vec
 }
 
-saveRDS(all_data_table, file = paste0("./all_results/setting", setting, "/batch", batch.num, ".RDS"))
+saveRDS(all_data_table, file = paste0("setting",setting, "batch", batch.num, ".RDS"))
 
 
 
