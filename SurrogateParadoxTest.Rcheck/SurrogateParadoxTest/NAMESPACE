@@ -1,3 +1,0 @@
-importFrom(stats, bw.nrd, lm, quantile, ecdf)
-importFrom(MonotonicityTest, monotonicity_test)
-export("test_assumptions")
