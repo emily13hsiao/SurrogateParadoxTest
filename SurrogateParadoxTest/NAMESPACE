@@ -1,6 +1,6 @@
 importFrom(stats, bw.nrd, lm, quantile, ecdf, pnorm, rnorm, sd)
 importFrom(MonotonicityTest, monotonicity_test)
-importFrom(ggplot2, ggplot, geom_point, geom_smooth, geom_tile, geom_contour, aes, labs, scale_fill_identity, theme_minimal, xlim)
+importFrom(ggplot2, ggplot, geom_point, geom_smooth, geom_tile, geom_contour, aes, labs, scale_fill_identity, theme_minimal, xlim, stat_smooth, coord_cartesian)
 importFrom(MASS, mvrnorm)
 export("test_assumptions")
 export("gaussian_process_interval")
