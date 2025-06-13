@@ -14,7 +14,7 @@
 }
 \usage{
   polynomial_resilience_set(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, sig1_values, 
-  sig2_values, alpha = 0.05)
+  sig2_values, alpha = 0.10)
 }
 
 \arguments{
@@ -43,7 +43,7 @@
     Vector of values of \eqn{\sigma_{22}^2} for which the probability of surrogate paradox should be calculated      with the given data.
   }
   \item{alpha}{
-    Threshold value of the surrogate paradox.
+    Threshold value of the surrogate paradox. Default is 0.10.
   }
 }
 

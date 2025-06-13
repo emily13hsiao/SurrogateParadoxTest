@@ -10,7 +10,7 @@
 }
 \usage{
   gp_resilience_set(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, sigma2_vals, theta_vals, 
-  alpha = 0.05)
+  alpha = 0.10)
 }
 
 \arguments{
@@ -39,7 +39,7 @@
     Vector of values of \eqn{\theta} for which the probability of surrogate paradox should be calculated with         the given data.
   }
   \item{alpha}{
-    Threshold value of the surrogate paradox.
+    Threshold value of the surrogate paradox. Default is 0.10.
   }
 }
 

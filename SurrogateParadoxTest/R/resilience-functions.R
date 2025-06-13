@@ -455,7 +455,7 @@ rbf_kernel <- function(x1, x2, theta, sigma2) {
 ################################################################################
 
 gp_resilience_set <- function(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, 
-                              sigma2_vals, theta_vals, alpha = 0.05) {
+                              sigma2_vals, theta_vals, alpha = 0.10) {
   
   mu_hat_1 <- smoother_fitter_extrapolate(s1.A, y1.A, h = bw.nrd(s1.A))
   mu_hat_0 <- smoother_fitter_extrapolate(s0.A, y0.A, h = bw.nrd(s0.A))
@@ -498,7 +498,7 @@ gp_resilience_set <- function(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B,
 }
 
 polynomial_resilience_set <- function(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B,
-                                      sig1_values, sig2_values, alpha = 0.05) {
+                                      sig1_values, sig2_values, alpha = 0.10) {
   
   mu_hat_1 <- smoother_fitter_extrapolate(s1.A, y1.A, h = bw.nrd(s1.A))
   mu_hat_0 <- smoother_fitter_extrapolate(s0.A, y0.A, h = bw.nrd(s0.A))
@@ -553,7 +553,7 @@ polynomial_resilience_set <- function(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B,
 }
 
 fourier_resilience_set <- function(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, 
-                                   sig1_values, sig2_values, alpha = 0.05) {
+                                   sig1_values, sig2_values, alpha = 0.10) {
   
   mu_hat_1 <- smoother_fitter_extrapolate(s1.A, y1.A, h = bw.nrd(s1.A))
   mu_hat_0 <- smoother_fitter_extrapolate(s0.A, y0.A, h = bw.nrd(s0.A))

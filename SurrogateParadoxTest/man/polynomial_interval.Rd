@@ -42,7 +42,7 @@
     Number of bootstrap iterations to estimate the SE of \eqn{\hat{p}_0} and \eqn{\hat{q}_\alpha}.
   }
   \item{q_quant}{
-    Desired quantile for the resilience bound.
+    Desired quantile for the resilience bound. Default is 0.10.
   }
   \item{plot}{
     TRUE or FALSE; include plots of randomly generated functions in results. Default is FALSE.
