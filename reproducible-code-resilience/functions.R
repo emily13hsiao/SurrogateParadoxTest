@@ -748,9 +748,7 @@ setting6 <- function(n.A, n.B, var_vec) {
   mu_hat_0 <- smoother_fitter_extrapolate(s0.A, y0.A, h = bw.nrd(s0.A))
   
   # Study B data
-  # s0.B <- sort(rnorm(n.B, -0.2, sqrt(1))) original
-  # s1.B <- sort(rnorm(n.B, 0.3, sqrt(2)))
-  s0.B <- sort(rnorm(n.B, -0.08, sqrt(1)))
+    s0.B <- sort(rnorm(n.B, -0.08, sqrt(1)))
   s1.B <- sort(rnorm(n.B, 0.45, sqrt(2)))
   
   std.s0.B <- (s0.B - mean(s0.A)) / sd(s0.A)

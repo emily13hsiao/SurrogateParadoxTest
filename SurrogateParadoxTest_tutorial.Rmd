@@ -1,26 +1,33 @@
 ---
-title: "Tutorial for main functions in SurrogateParadoxTest package"
+title: "Tutorial for the SurrogateParadoxTest package"
 output:
   html_document:
 ---
 
 ```{r global_options, echo=FALSE}
 knitr::opts_chunk$set(fig.width=7, warning=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60))
+library(MASS)
 ```
 
-# Main Functions
+# Introduction and Installation
 
-We will go through an example using the main functions in the **SurrogateParadoxTest** package. First, install the package from CRAN and load it. This package imports the **MonotonicityTest** package; if you see error messages about a fortran compiler, please see: https://cran.r-project.org/bin/macosx/tools/ We also load **ggplot2** for plots made later in the document.
+The package **SurrogateParadoxTest** contains functions that serve two main purposes. The first purpose is to test assumptions that protect against the surrogate paradox. The second purpose is to estimate measures of resilience to the surrogate paradox. We will walk through examples using the functions in the **SurrogateParadoxTest** package. 
+
+First, install the package and load it. The package version on CRAN (Version 2.0) does not yet include the resilience measures. Version 2.1 on Github does include resilience measures, so we will load that version here. This package requires the **MonotonicityTest** package (along with other packages). For this package in particular, if you see error messages about a fortran compiler, please see: https://cran.r-project.org/bin/macosx/tools/ We also load **ggplot2** for plots made later in the document.
 
 ```{r results = "hide", message=FALSE}
-#install.packages("SurrogateParadoxTest")
+library(devtools)
+#devtools::install_github("emily13hsiao/SurrogateParadoxTest",subdir="SurrogateParadoxTest")
 library(SurrogateParadoxTest)
 library(ggplot2)
+
 ```
 
-This package provides functions to nonparametrically assess assumptions necessary to prevent the surrogate paradox through hypothesis tests of stochastic dominance, monotonicity of regression functions, and non-negative residual treatment effects. More details will be available in Hsiao, Tian, Parast (2025) "Avoiding the Surrogate Paradox: An Empirical Framework for Assessing Assumptions" (under review).
+# Testing Assumptions
 
-The main function is **test_assumptions** which tests the 3 assumptions that are sufficient to prevent the surrogate paradox: (1) stochastic dominance of
+We will first illustrate the functions in this package to nonparametrically test assumptions that protect against the surrogate paradox. Specifically, these are hypothesis tests of stochastic dominance, monotonicity of regression functions, and non-negative residual treatment effects. More details are available in Hsiao, Tian, Parast (2025) "Avoiding the Surrogate Paradox: An Empirical Framework for Assessing Assumptions," Journal of Nonparametric Statistics. [doi:10.1080/10485252.2025.2498609](https://doi.org/10.1080/10485252.2025.2498609)
+
+The main function for this is **test_assumptions** which tests the 3 assumptions that are sufficient to prevent the surrogate paradox: (1) stochastic dominance of
 surrogate values in the treatment group over control group, (2) monotonicity of the relationship 
 between the surrogate and the primary outcome in both treatment and control groups, and (3) a non-negative
 residual treatment effect.
@@ -91,7 +98,7 @@ test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = "all", all_resul
 
 The package only exports the **test_assumptions** function. But there are many internal functions you may find useful. To get them, use three colons for example **SurrogateParadoxTest:::smoother_fitter()**. 
 
-# Visualizations 
+# Visualizations: Testing Assumptions 
 Next, we create visualizations that may be helpful as you test these assumptions. Below, we plot the empirical cdfs of the surrogate in each group, useful for assessing stochastic dominance. Generally, when stochastic dominance holds, we should see the red line at or above the blue line for the entire support.
 
 ```{r}
@@ -198,6 +205,165 @@ p <- ggplot(smoothed_df) +
 p
 ```
 
+# Resilience Measures 
+
+Next, we will illustrate the functions in this package to estimate resilience measures. These measures are proposed in Hsiao E, Tian L, and Parast L, "Resilience Measures for the Surrogate Paradox" (Under Review). The setting is as follows. Suppose you have a completed study, which we will call Study A, in which you have validated a surrogate. In this study you have the surrogate (S) and the primary outcome (Y) measures for all individuals in both treatment groups, and there is a positive treatment effect on both the surrogate and the primary outcome. You also have a second study, Study B, where you only have values of the surrogate and **no values of Y**, and there is a positive treatment effect on the surrogate. Your primary interest is in understanding the treatment effect on the primary outcome in Study B, denoted as $\Delta_B$. Crucially, we may not want to make the assumption that the conditional mean functions, $\mu_g$, (the expected value of the outcome given the surrogate in treatment group g) are the same in Study A and Study B. 
+
+The resilience measures include three measures: 1) the resilience probability, which is the estimated probability that $\Delta_B<0$ i.e., the probability of the surrogate paradox in Study B; 2) the resilience bound, an estimated lower bound on $\Delta_B$ such that $P(\Delta_B<0) \leq \alpha$; 3) the resilience set, the space of all possible conditional mean functions where $P(\Delta_B<0) \leq \alpha$. These measures are estimated by considering a range of possible deviations from the conditional mean function observed in Study A. That is, we generate potential mean functions in Study B that differ from Study A using: (1) a Gaussian Process specification, (2)  Fourier deviations, or (3) polynomial deviations. We have functions for each type of deviation. 
+
+The **gaussian_process_interval** function assumes that the $Y$ values in Study B are generated from a Gaussian Process with mean centered at the estimated mean functions from Study A, and the variance and smoothness parameters are set at values specified by the user. The required inputs to the function are the S and Y data from the treatment and control group in Study A (**s0.A, y0.A, s1.A, y1.A**), the S values of the treatment and control group in Study B (**s0.B, s1.B**), and Gaussian process parameters $\sigma^2$ and $\theta$ (**sigma2, theta**). Let's look at an example.
+
+```{r}
+#Generate data for illustration
+set.seed(1)
+s0.A <- rnorm(100, 3, sqrt(3))
+y0.A <- sapply(s0.A, function(x) 2 * x - 1) + rnorm(100)
+s1.A <- rnorm(100, 4, sqrt(3))
+y1.A <- sapply(s1.A, function(x) x + 3) + rnorm(100)
+s0.B <- rnorm(100, 3.75, sqrt(1))
+s1.B <- rnorm(100, 4.25, sqrt(1))
+
+# Set parameters for sigma2 and theta
+sigma2 <- 1
+theta <- 1
+
+# Call function
+results <- gaussian_process_interval(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B,
+                                     sigma2, theta, n.iter = 200, plot = TRUE)
+results$p_hat
+results$p_se
+
+results$q_hat
+results$q_se
+```
+
+The **p_hat** quantity is the estimated resilience probability and **p_se** is the estimated standard error which we obtain using a bootstrap procedure. The **q_hat** quantity is the estimated resilience bound and **q_se** is the estimated standard error. If you don't want to calculate standard errors, you can set get_var = FALSE in the parameters. Similarly, if you don't want to return any plots, you can set **plot = FALSE** in the parameters, but just to get a sense of where the estimated probability comes from, let's look at the plots our method just generated.
+
+```{r}
+print(results$control_plot)
+print(results$treatment_plot)
+```
+
+The scatterplot shows the observed data in Study B. The gray lines show potential mean functions we have generated for Study B. We then plug in our **s0.B** and **s1.B** values into these potential mean functions and calculate the resulting value of $\Delta_{B,j}$ for some $j = 1,...,n.iter$ and the probability of the surrogate paradox is calculated as $\sum_{j=1}^{n.iter} I(\Delta_{B,j} < 0)$.
+
+A key component of our estimates is the values of $\sigma^2$ and $\theta$ that a user needs to specify. Higher $\sigma^2$ values will result in functions that are potentially very different from what was observed in Study A, and higher $\theta$ values will result in smoother functions. You may want to set $\sigma^2$ to be very small in cases where you do not think the function in Study B will be very different (i.e., you are repeating a clinical trial with the same treatment and a similar population), and set it to be higher when you believe the Study B function could be very different (i.e., a treatment with a very different biological mechanism, or a very different study population). Let's see what our functions look like if we increase our $\sigma^2$ parameter.
+
+```{r}
+sigma2 <- 5
+results <- gaussian_process_interval(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B,
+                                     sigma2, theta, n.iter = 200, plot = TRUE)
+print(results$control_plot)
+print(results$treatment_plot)
+```
+
+Now let's take a look at the **fourier_interval** function. The basic idea of generating new functions is the same, but now we assume that the functions in Study B are generated as deviations from the estimated conditional mean in Study A governed by a fourier series specification. This specification involves two sets of parameters, $\Sigma$ which is the variance/covariance matrix for the coefficients, and $B$ which reflects the period of the sin and cosine terms. Here we assume that $\Sigma$ is restricted to diagonal matrices of length 4.
+
+To use this function, the parameters you need are the S and Y data from the treatment and control group in Study A (**s0.A, y0.A, s1.A, y1.A**), the S values of the treatment and control group in Study B (**s0.B, s1.B**), the variance vector which compose the diagonal elements of $Sigma$ (var_vec), and a length-3 vector $B$ (period). The elements of the period vector represent proportions of the width of the support of $S$ values in Study A. Let's take a look at an example.
+
+```{r}
+var_vec <- c(0.20, 0.20, 0.1, 0.1)
+period <- c(0.5, 0.25, 0.1)
+
+result <- fourier_interval(s0.A,  y0.A, s1.A, y1.A, s0.B, s1.B, var_vec, period, 
+                           n.iter = 200, plot = TRUE)
+result$p_hat
+result$p_se
+print(result$control_plot)
+print(result$treatment_plot)
+```
+
+For this function, increasing the values of **var_vec** will result in more different functions. 
+
+```{r}
+var_vec <- c(1, 1, 0.5, 0.5)
+result <- fourier_interval(s0.A,  y0.A, s1.A, y1.A, s0.B, s1.B, var_vec, period, 
+                           n.iter = 200, plot = TRUE)
+print(result$control_plot)
+print(result$treatment_plot)
+```
+
+Now, let's move on to our third resilience interval function, **polynomial_interval**. Here, we assume that the functions in Study B are generated as deviations from the estimated conditional mean in Study A governed by a polynomial specification. This specification involves the parameter $\Sigma$ which is the variance/covariance matrix for the coefficients, and we restrict $\Sigma$ to be a diagonal matrix of 4 elements.  We also restrict to degree-3 polynomials.
+
+To use this function, the parameters you need are the S and Y data from the treatment and control group in Study A (**s0.A, y0.A, s1.A, y1.A**), the S values of the treatment and control group in Study B (**s0.B, s1.B**), and the variance vector which compose the diagonal elements of $Sigma$ (**var_vec**).
+
+```{r}
+var_vec <- c(0.25, 0.25, 0.1, 0.1)
+
+result <- polynomial_interval(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, var_vec,
+                           n.iter = 200, plot = TRUE)
+result$p_hat
+result$p_se
+print(result$control_plot)
+print(result$treatment_plot)
+```
+
+Now, if you increase the values of **var_vec**, you can also get more different functions. Notice that as you get farther away from the mean of the data, the tails get much more extreme for this method.
+
+```{r}
+var_vec <- c(1, 1, 0.5, 0.5)
+
+result <- polynomial_interval(s0.A,  y0.A, s1.A, y1.A, s0.B, s1.B, var_vec,
+                           n.iter = 200, plot = TRUE)
+print(result$control_plot)
+print(result$treatment_plot)
+```
+
+# The Resilience Set
+
+Now let's think about this question: given the data that we're seeing and a model that we are assuming, what values of the parameters would result in a low likelihood of the paradox? You could use this to consider whether the parameter values you think are feasible for your study lie within this region or not. 
+
+In the **gp_resilience_set** function, we assume that the Study B functions are generated from a Gaussian process with parameters $\sigma^2$ and $\theta$. You need to input all the data from Study A and the surrogate values from Study B, and specify a vector of values for the parameters that you'd like to evaluate the probability of. You also a set an $\alpha$ level (default 0.05) that is the maximum probability of the paradox that you'd to see. It outputs for you a plot showing the regions of the parameter space where the probability of the paradox is lower than $\alpha$. Let's see:
+
+```{r}
+# Let's use some new data
+set.seed(1)
+s0.A <- rnorm(100, 5, 1)
+s1.A <- rnorm(100, 6, sqrt(2))
+y0.A <- sapply(s0.A, function(x) 0.2 + 0.4 * sin(x) + 0.4 * cos(x))
+y1.A <- sapply(s1.A, function(x) 0.6 + 0.85 * sin(x) + 0.85 * cos(x))
+s0.B <- rnorm(100, 5.5, sqrt(0.5))
+s1.B <- rnorm(100, 6.5, sqrt(0.5))
+
+# Now apply the method
+sigma2_vals <- seq(0.1, 10, length.out = 200)
+theta_vals <- seq(0.1, 10, length.out = 200)
+gp_resilience_set(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, sigma2_vals, theta_vals)
+
+```
+
+For the **fourier_resilience_set** function, in order to get a 2-d plot, we have to simplify our parameter space a little bit, so we assume that $\Sigma = diag(\sigma_{11}^2, \sigma_{11}^2, \sigma_{22}^2, \sigma_{22}^2)$. Again, you have to specify a vector of values that you would like to evaluate.
+
+```{r}
+sig1_values <- seq(0.01, 0.1, length.out = 100)
+sig2_values <- seq(0.01, 0.1, length.out = 100)
+
+fourier_resilience_set(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, sig1_values, sig2_values)
+```
+
+Finally, the **polynomial_resilience_set** works the same as the Fourier version, with the parameter restricted to diagonal matrices with 2 parameters. Here it is:
+
+```{r}
+sig1_values <- seq(0.01, 0.25, length.out = 100)
+sig2_values <- seq(0.01, 0.4, length.out = 100)
+
+polynomial_resilience_set(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, sig1_values, sig2_values)
+```
+
 That's all for now!
 
 ---------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -2,16 +2,16 @@
 library(tidyverse)
 library(MASS)
 library(patchwork)
-source("./../functions.R")
+source("functions.R")
 set.seed(1)
 
 # Read in data
-s0.A <- readRDS("./s0_A.RDS")
-y0.A <- readRDS("./y0_A.RDS")
-s1.A <- readRDS("./s1_A.RDS")
-y1.A <- readRDS("./y1_A.RDS")
-s0.B <- readRDS("./s0_B.RDS")
-s1.B <- readRDS("./s1_B.RDS")
+s0.A <- readRDS("s0_A.RDS")
+y0.A <- readRDS("y0_A.RDS")
+s1.A <- readRDS("s1_A.RDS")
+y1.A <- readRDS("y1_A.RDS")
+s0.B <- readRDS("s0_B.RDS")
+s1.B <- readRDS("s1_B.RDS")
 
 Delta_A <- mean(y1.A) - mean(y0.A)
 Delta_A
@@ -60,17 +60,17 @@ polynomial_results$q_se
 ################################################################################
 
 sigma2_vals <- seq(0.1, 10, length.out = 50); theta_vals <- seq(0.1, 10, length.out = 50)
-gp_set <- gp_resilience_set(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, sigma2_vals, theta_vals)
+gp_set <- gp_resilience_set(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, sigma2_vals, theta_vals, alpha = 0.10)
 gp_set
 ggsave("aids_gp_res_set.png")
 
-sig1_vals <- seq(0.01, 0.25, length.out = 50); sig2_vals <- seq(0.01, 2, length.out = 50)
-fourier_set <- fourier_resilience_set(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, sig1_vals, sig2_vals)
+sig1_vals <- seq(0.01, 0.5, length.out = 50); sig2_vals <- seq(0.01, 3, length.out = 50)
+fourier_set <- fourier_resilience_set(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, sig1_vals, sig2_vals, alpha = 0.10)
 fourier_set
 ggsave("aids_fourier_res_set.png")
 
-sig1_vals <- seq(0.01, 0.15, length.out = 50); sig2_vals <- seq(0.01, 0.2, length.out = 50)
-poly_set <- polynomial_resilience_set(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, sig1_vals, sig2_vals)
+sig1_vals <- seq(0.01, 0.2, length.out = 50); sig2_vals <- seq(0.01, 0.5, length.out = 50)
+poly_set <- polynomial_resilience_set(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, sig1_vals, sig2_vals, alpha = 0.10)
 poly_set
 ggsave("aids_poly_res_set.png")
 
