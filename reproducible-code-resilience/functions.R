@@ -472,7 +472,7 @@ setting1 <- function(n.A, n.B) {
   s0.A <- sort(rnorm(n.A, 3, sqrt(3)))
   y0.A <- sapply(s0.A, m0) + rnorm(n.A, sd = sqrt(noise_var))
   s1.A <- sort(rnorm(n.A, 4, sqrt(3)))
-  y1.A <- sapply(s1.A, m1) + rnorm(n.B, sd = sqrt(noise_var))
+  y1.A <- sapply(s1.A, m1) + rnorm(n.A, sd = sqrt(noise_var))
   
   # Study B data
   mu_hat_1 <- smoother_fitter_extrapolate(s1.A, y1.A, h = bw.nrd(s1.A))
@@ -529,7 +529,7 @@ setting2 <- function(n.A, n.B) {
   s0.A <- sort(rnorm(n.A, 3, sqrt(3)))
   y0.A <- sapply(s0.A, m0) + rnorm(n.A, sd = sqrt(noise_var))
   s1.A <- sort(rnorm(n.A, 4, sqrt(3)))
-  y1.A <- sapply(s1.A, m1) + rnorm(n.B, sd = sqrt(noise_var))
+  y1.A <- sapply(s1.A, m1) + rnorm(n.A, sd = sqrt(noise_var))
   
   # Study B data
   mu_hat_1 <- smoother_fitter_extrapolate(s1.A, y1.A, h = bw.nrd(s1.A))
@@ -924,7 +924,7 @@ setting8 <- function(n.A, n.B, var_vec, period){
   return(data)
 }
 
-setting9<-function(n.A, n.B, var_vec, period){
+setting9 <- function(n.A, n.B, var_vec, period){
   #Trueparameters
   m0<-function(s) 0.2+0.4*sin(s)+0.4*cos(s)
   m1<-function(s) .6+ 0.85*sin(s)+0.85*cos(s)
