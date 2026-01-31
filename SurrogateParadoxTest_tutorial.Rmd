@@ -59,7 +59,7 @@ The default is to run all 3 tests (**type = "all"**). However the user can speci
 Let's start with just testing stochastic dominance. We will use **all_results=FALSE** which says to only give the result indicating whether the assumption holds or not (omitting all the other details). 
 
 ```{r}
-test_assumptions(s0 = s_c, y0 = y_t, s1 = s_t, y1 = y_t, type = "sd", all_results = FALSE)
+test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = "sd", all_results = FALSE)
 
 ```
 
@@ -69,16 +69,16 @@ Here, the results of the test indicate that the stochastic dominance assumption 
 test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = "sd", all_results = TRUE)
 
 ```
-Truth be told, these won't make sense without seeing the manuscript. But essentially, the null hypothesis of the test is that the stochastic dominance assumption does hold. The alternative is that it is does not hold i.e., there exists some s where dominance does not hold. This gives the value of our test statistic **s_hat**, the p-value from testing this null hypothesis **p.value**, and whether we reject the null hypothesis **reject**. 
+Truth be told, these won't make sense without seeing the manuscript. But essentially, the null hypothesis of the test is that the stochastic dominance assumption does hold. The alternative is that it does not hold i.e., there exists some s where dominance does not hold. This gives the value of our test statistic **s_hat**, the p-value from testing this null hypothesis **p.value**, and whether we reject the null hypothesis **reject**. 
 
-Now let's test montonicity; this does involve resampling, so set the seed so your results are reproducible. This function used to be computationally inefficient but we now depend on and use the **MonotonicityTest** package which is much faster. Below, we set the number of bootstrap samples to 200 i.e., **monotonicity_bootstrap_n=200**. 
+Now let's test monotonicity; this does involve resampling, so set the seed so your results are reproducible. This function used to be computationally inefficient but we now depend on and use the **MonotonicityTest** package which is much faster. Below, we set the number of bootstrap samples to 200 i.e., **monotonicity_bootstrap_n=200**. 
 
 ```{r}
 set.seed(12)
 test_assumptions(s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = "monotonicity", all_results = FALSE, monotonicity_bootstrap_n = 200)
 ```
 
-These results show that the test indicates that the montonicity assumption holds in both groups. 
+These results show that the test indicates that the monotonicity assumption holds in both groups. 
 
 Now let's test the non-negative residual treatment effect assumption. This also involves bootstrap resampling, so set the seed so your results are reproducible. 
 
@@ -102,8 +102,6 @@ The package only exports the **test_assumptions** function. But there are many i
 Next, we create visualizations that may be helpful as you test these assumptions. Below, we plot the empirical cdfs of the surrogate in each group, useful for assessing stochastic dominance. Generally, when stochastic dominance holds, we should see the red line at or above the blue line for the entire support.
 
 ```{r}
-library(ggplot2)
-
 # Empirical CDFs
 F0 <- ecdf(s_c)
 F1 <- ecdf(s_t)
@@ -312,7 +310,7 @@ print(result$treatment_plot)
 
 Now let's think about this question: given the data that we're seeing and a model that we are assuming, what values of the parameters would result in a low likelihood of the paradox? You could use this to consider whether the parameter values you think are feasible for your study lie within this region or not. 
 
-In the **gp_resilience_set** function, we assume that the Study B functions are generated from a Gaussian process with parameters $\sigma^2$ and $\theta$. You need to input all the data from Study A and the surrogate values from Study B, and specify a vector of values for the parameters that you'd like to evaluate the probability of. You also a set an $\alpha$ level (default 0.05) that is the maximum probability of the paradox that you'd to see. It outputs for you a plot showing the regions of the parameter space where the probability of the paradox is lower than $\alpha$. Let's see:
+In the **gp_resilience_set** function, we assume that the Study B functions are generated from a Gaussian process with parameters $\sigma^2$ and $\theta$. You need to input all the data from Study A and the surrogate values from Study B, and specify a vector of values for the parameters that you'd like to evaluate the probability of. You also set an $\alpha$ level (default 0.05) that is the maximum probability of the paradox that you'd to see. It outputs for you a plot showing the regions of the parameter space where the probability of the paradox is lower than $\alpha$. Let's see:
 
 ```{r}
 # Let's use some new data
