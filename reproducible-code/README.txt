@@ -1,5 +1,4 @@
-Instructions for reproducing simulation results in Hsiao E, Tian L, Parast L (2026). Avoiding the Surrogate Paradox: An Empirical Frame-
-work for Assessing Assumptions. Journal of Nonparametric Statistics, 38(1): 70–91.
+Instructions for reproducing simulation results in Hsiao E, Tian L, Parast L (2026). Avoiding the Surrogate Paradox: An Empirical Framework for Assessing Assumptions. Journal of Nonparametric Statistics, 38(1): 70–91.
 
 The files run-a1-sims.R, run-a2-sims.R, and run-a3-sims.R are used to reproduce the results in Tables 1-3. 
 
