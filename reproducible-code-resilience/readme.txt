@@ -1,4 +1,4 @@
-Instructions for reproducing simulation and data application results in Hsiao, E., Tian, L., & Parast, L. (2025). Resilience Measures for the Surrogate Paradox (Under Review).
+Instructions for reproducing simulation and data application results in Hsiao, E., Tian, L., & Parast, L. (2026). Resilience Measures for the Surrogate Paradox (Under Review).
 
 There are two files in the aids-data folder. The data-cleaning.R file reads in the HIV clinical trial data (we are not authorized to share the raw data), and aids-application.R runs all functions and reproduces all results and figures in the paper. You will need to run the functions.R file in this folder before you run the aids-application.R file. 
 
