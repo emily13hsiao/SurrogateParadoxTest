@@ -1,15 +1,17 @@
 Instructions for reproducing simulation and data application results in Hsiao, E. & Parast, L. (2026). Functional-Class
 Meta-Analytic Framework for Quantifying Surrogate Resilience (Under Review).
 
+First, place all .R files in this folder in the same directory. 
 
+Next, run the file true-probabilities.R - this calculates the "true" resilience probability using a large sample truth calculation. It writes the true probabilities to a text file that is read in below when constructing the tables. 
 
-Files you will need in the same directory: 
-true-probabilities.R
-functions-with-se.R
-data_generation.R
-
-
-First, run the file true-probabilities.R - this calculated the "true" resilience probability using a large sample truth calculation. It writes the true probabilities to a text file that is read in below when constructing the tables. 
+# -------------------------------
+# -------------------------------
+# -------------------------------
+# Table: Main text of paper
+# -------------------------------
+# -------------------------------
+# -------------------------------
 
 
 # -------------------------------
@@ -17,7 +19,7 @@ First, run the file true-probabilities.R - this calculated the "true" resilience
 # -------------------------------
 
 
-To reproduce the table, you will need to run one setting at a time. To run Setting 1, first open the main_file.R and change setting to 1. If using PAB set use_pab to TRUE, otherwise set it to FALSE. Set:
+To reproduce the table, you will need to run one setting at a time. To run Setting 1, first open the main_file.R and change setting to 1. Set:
 n.study = 25
 n.each = 10
 Next, run in parallel the following 30 files sims_em_linX.R where X is 1 through 10, sims_em_cubX.R where X is 1 through 10, and sims_em_spX.R where X is 1 through 10. Each file will write results to a csv file. 
@@ -46,8 +48,28 @@ Run the MV_file.R to produce the MV (last column) comparison estimates. No edits
 # Final tables 
 # -------------------------------
 
-Open the readin_file.R. Set use_pab, n.study, and n.each to match your specifications for the table you would like to produce. Make sure that the following are in your directory 1) the true probabilities file 2) the 30*6 files you created from the main simulation files 3) the output from the MV_file.R script. Then run this script and this will produce the results table and write the table to a .tex file.  
+Open the readin_file.R. Set n.study, and n.each to match your specifications for the table you would like to produce. Make sure that the following are in your directory 1) the true probabilities file 2) the 30*6 files you created from the main simulation files 3) the output from the MV_file.R script. Then run this script and this will produce the results table and write the table to a .tex file.  
 
 
+# -------------------------------
+# -------------------------------
+# -------------------------------
+# Table: Supplementary, PAB results
+# -------------------------------
+# -------------------------------
+# -------------------------------
+
+The PAB SE runs much faster and hence, we do not use multiple scripts. Open pab-simulations.R and set the setting=1 and run the file. Next, set setting=2, run the file. Go on until and including setting =6. After all 6 have run, use the pab-table.R script which will read in the output and produce the PAB table. Note that the true values are hard-coded into this final file.  
+
+
+# -------------------------------
+# -------------------------------
+# -------------------------------
+# Example results
+# -------------------------------
+# -------------------------------
+# -------------------------------
+
+The file code_application.R will reproduce the application results stated in the paper. 
 
 
