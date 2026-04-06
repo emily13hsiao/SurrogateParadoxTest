@@ -1,19 +1,17 @@
-#################################################
-## Main data application
-#################################################
-
-# Load required packages
+# Reproduce application done by Layla
 
 library(Surrogate)
-library(ggplot2)
 library(tidyverse)
 library(dplyr)
+source("functions-with-se.R")
 
+# Set seed
+RNGkind("L'Ecuyer-CMRG")
+set.seed(1)
 
 #################################################
 ## Schizo data
 #################################################
-
 
 # Load data
 data("Schizo")
@@ -25,30 +23,12 @@ Schizo <- Schizo %>%
     InvestId = as.factor(InvestId)
   )
 
-# Plot PANSS vs BPRS by Treat, color by InvestId
-ggplot(Schizo, aes(x = BPRS, y = PANSS, color = InvestId)) +
-  geom_point(alpha = 0.7) +
-  geom_smooth(method = "loess", se = FALSE, linewidth = 1) +
-  facet_wrap(~Treat, ncol = 2, labeller = label_both) +
-  labs(
-    y = "PANSS score",
-    x = "BPRS score",
-    title = "Relationship between PANSS and BPRS by Treat group"
-  ) +
-  theme_minimal(base_size = 14) +
-  theme(
-    legend.position = "none",
-    strip.text = element_text(face = "bold")
-  )
-
 #################################################
 
-###run functions file
-source("functions-with-se.R")
-#for both PANSS and BPRS higher is worse, so we hope for a reduction. Looking at PANSS binary, this must be coded as measurement at end minus measurement at the beginning because negative numbers are GOOD and are coded as reductions. 
-#coding such that higher numbers indicate better
-
-
+# For both PANSS and BPRS higher is worse, so we hope for a reduction. 
+# Looking at PANSS binary, this must be coded as measurement at end minus 
+# measurement at the beginning because negative numbers are GOOD and are coded as reductions. 
+# making higher numbers indicate better
 
 Schizo_flip = Schizo
 Schizo_flip$PANSS = -1*Schizo$PANSS
@@ -56,136 +36,129 @@ Schizo_flip$BPRS = -1*Schizo$BPRS
 Schizo_flip$Treat = 1*(Schizo$Treat == 1)
 Schizo_flip = na.omit(Schizo_flip)
 
-# look at how many patients per practice
+# Rename InvestId to PracticeID
+Schizo_flip = Schizo_flip %>% mutate(PracticeID = InvestId)
+# Just going to select the relevant columns
+Schizo_flip = Schizo_flip %>% dplyr::select(Id, PracticeID, Treat, PANSS, BPRS)
 
-table(Schizo_flip$InvestId)
+# Look at how many patients per practice
+table(Schizo_flip$PracticeID)
 
-#summarize treatment effect on s and on y, as well as sample size in each arm, for each practice
+# Identify practices with at least 6 patients
 
-data_sub = Schizo_flip
+big = which(table(Schizo_flip$PracticeID)>=5)
+data_sub = Schizo_flip[Schizo_flip$PracticeID %in% big,]
+data_sub
+
+# Summarize treatment effect on S and on Y, as well as sample size in each arm, 
+# for each practice
+
 info_mat = c()
-id_list = sort(unique(data_sub$InvestId))
+id_list = sort(unique(data_sub$PracticeID))
 for(j in 1:length(id_list)){
-  data_sub_id = data_sub[data_sub$InvestId == id_list[j],]
+  data_sub_id = data_sub[data_sub$PracticeID == id_list[j],]
   treat.s = mean(data_sub_id$BPRS[data_sub_id$Treat == 1] ) - mean(data_sub_id$BPRS[data_sub_id$Treat == 0] ) 
   treat.y = mean(data_sub_id$PANSS[data_sub_id$Treat == 1] ) - mean(data_sub_id$PANSS[data_sub_id$Treat == 0] ) 
   
   info_mat = rbind(info_mat, c(id_list[j], treat.s, treat.y, length(data_sub_id$BPRS[data_sub_id$Treat == 0]), length(data_sub_id$BPRS[data_sub_id$Treat == 1])))
-	}
-
+}
+colnames(info_mat) <- c("PracticeID", "DeltaS", "DeltaY", "n0", "n1")
 info_mat
 
-#set minumum number per practice per treatment group
+# Set minumum number per practice per treatment group and subset
 
 min_number = 6
-
-#identify subset of studies to include
-
 studies_want = info_mat[info_mat[,4] >=min_number & info_mat[,5] >=min_number, ]
+studies_want <- data.frame(studies_want)
 
-#decide on two different studies we want to pull out as study B
+# We are going to use Study 50 and Study 3 as "Study B"
 
-studies_b = c(50,3)
+studies_b = c(50, 3)
 studies_a = setdiff(studies_want[,1],studies_b)
+
+# Make full dataset
+dataset = data.frame("S" = Schizo_flip$BPRS, 
+                     "Y" = Schizo_flip$PANSS, 
+                     "G" = Schizo_flip$Treat, 
+                     "study" = Schizo_flip$PracticeID)
+dataset = dataset[dataset$study %in% studies_a,]
 
 #################################################
 ## Setup with study B choice #1
 #################################################
 
-example_data = list(data =c(), s0.B = Schizo_flip$BPRS[Schizo_flip$InvestId == studies_b[1] & Schizo_flip$Treat == 0], s1.B = Schizo_flip$BPRS[Schizo_flip$InvestId == studies_b[1] & Schizo_flip$Treat == 1])
+# SET UP DATA FORMAT
+study3data <- Schizo_flip %>% filter(PracticeID == 3) %>% data.frame()
+s0.B <- filter(study3data, Treat == 0)$BPRS
+s1.B <- filter(study3data, Treat == 1)$BPRS
 
-dataset = data.frame("S" = Schizo_flip$BPRS, "Y" = Schizo_flip$PANSS, "G" = Schizo_flip$Treat, "study" = Schizo_flip$InvestId)
-dataset = dataset[dataset$study %in% studies_a,]
+# Run procedure
+linear_model <- full_procedure(dataset, s0.B, s1.B, use_spline = FALSE, 
+                               degree = 1, try_analytic = FALSE)
+linear_data <- c(linear_model$p, linear_model$se_p, 
+                 linear_model$p - 1.96 * linear_model$se_p,
+                 linear_model$p + 1.96 * linear_model$se_p)
 
-example_data$data = dataset
+cubic_model <- full_procedure(dataset, s0.B, s1.B, use_spline = FALSE, 
+                              degree = 3, try_analytic = FALSE)
+cubic_data <- c(cubic_model$p, cubic_model$se_p, 
+                 cubic_model$p - 1.96 * cubic_model$se_p,
+                 cubic_model$p + 1.96 * cubic_model$se_p)
 
-#run procedure
-set.seed(1)
-prob_degree3spline <- full_procedure(example_data$data, example_data$s0.B, example_data$s1.B, degree=3, use_spline = TRUE, calculate_se = TRUE, try_analytic = FALSE) 
+spline_model <- full_procedure(dataset, s0.B, s1.B, use_spline = TRUE, 
+                               degree = 3, try_analytic = FALSE)
+spline_data <- c(spline_model$p, spline_model$se_p, 
+                 spline_model$p - 1.96 * spline_model$se_p,
+                 spline_model$p + 1.96 * spline_model$se_p)
 
-#results
-prob_degree3spline
+# Now to make a table of: p, SE_p, lower endpoint, upper endpoint
+study3row <- c(linear_data, cubic_data, spline_data)
 
-##################################################
+#################################################
 ## Setup with study B choice #2
 #################################################
 
-example_data = list(data =c(), s0.B = Schizo_flip$BPRS[Schizo_flip$InvestId == studies_b[2] & Schizo_flip$Treat == 0], s1.B = Schizo_flip$BPRS[Schizo_flip$InvestId == studies_b[2] & Schizo_flip$Treat == 1])
+# SET UP DATA FORMAT
+study50data <- Schizo_flip %>% filter(PracticeID == 50) %>% data.frame()
+s0.B <- filter(study50data, Treat == 0)$BPRS
+s1.B <- filter(study50data, Treat == 1)$BPRS
 
-dataset = data.frame("S" = Schizo_flip$BPRS, "Y" = Schizo_flip$PANSS, "G" = Schizo_flip$Treat, "study" = Schizo_flip$InvestId)
-dataset = dataset[dataset$study %in% studies_a,]
+# Run procedure
+linear_model <- full_procedure(dataset, s0.B, s1.B, use_spline = FALSE, 
+                               degree = 1, try_analytic = FALSE)
+linear_data <- c(linear_model$p, linear_model$se_p, 
+                 linear_model$p - 1.96 * linear_model$se_p,
+                 linear_model$p + 1.96 * linear_model$se_p)
 
-example_data$data = dataset
+cubic_model <- full_procedure(dataset, s0.B, s1.B, use_spline = FALSE, 
+                              degree = 3, try_analytic = FALSE)
+cubic_data <- c(cubic_model$p, cubic_model$se_p, 
+                cubic_model$p - 1.96 * cubic_model$se_p,
+                cubic_model$p + 1.96 * cubic_model$se_p)
 
-#run procedure
-set.seed(100)
-prob_degree3spline <- full_procedure(example_data$data, example_data$s0.B, example_data$s1.B, degree=3, use_spline = TRUE, calculate_se = TRUE, try_analytic = FALSE) 
+spline_model <- full_procedure(dataset, s0.B, s1.B, use_spline = TRUE, 
+                               degree = 3, try_analytic = FALSE)
+spline_data <- c(spline_model$p, spline_model$se_p, 
+                 spline_model$p - 1.96 * spline_model$se_p,
+                 spline_model$p + 1.96 * spline_model$se_p)
 
-#results
-prob_degree3spline
-
-
-##################################################
-## Make plot for paper
-#################################################
-
-
-# Prepare data
-Schizo_flip <- Schizo_flip %>%
-  mutate(
-    Treat = as.factor(Treat),
-    InvestId = as.factor(InvestId)
-  )
-
-Schizo_flip_studies_a = Schizo_flip[Schizo_flip$InvestId %in% studies_a,]
-
-# Plot PANSS vs BPRS by Treat, color by InvestId
-nw_smooth <- function(x, y, bw, trim = 0.02) {
-  lo <- quantile(x, trim)
-  hi <- quantile(x, 1 - trim)
-  grid <- seq(lo, hi, length.out = 200)
-
-  K <- function(u) exp(-0.5 * u^2) / sqrt(2 * pi)
-
-  yhat <- sapply(grid, function(g) {
-    w <- K((g - x) / bw)
-    sum(w * y) / sum(w)
-  })
-
-  data.frame(x = grid, y = yhat)
-}
-
-library(purrr)
-
-bw <- 8   
-
-smoothed_df <- Schizo_flip_studies_a %>%
-  group_by(Treat, InvestId) %>%
-  group_modify(~ {
-    df <- .
-    nw_smooth(df$BPRS, df$PANSS, bw = bw)
-  })
+# Now to make a table of: p, SE_p, lower endpoint, upper endpoint
+study50row <- c(linear_data, cubic_data, spline_data)
 
 
-ggplot() +
-  geom_point(data = Schizo_flip_studies_a,
-             aes(x = BPRS, y = PANSS, color = InvestId),
-             alpha = 0.7) +
-  geom_line(data = smoothed_df,
-            aes(x = x, y = y, color = InvestId),
-            linewidth = 1) +
-  facet_wrap(
-    ~Treat,
-    ncol = 2,
-    labeller = labeller(Treat = c(`0`="Control", `1`="Treatment"))
-  ) +
-  labs(
-    y = "PANSS score",
-    x = "BPRS score"
-   # title = "Relationship between PANSS and BPRS by Treatment group"
-  ) +
-  theme_minimal(base_size = 14) +
-  theme(
-    legend.position = "none",
-    strip.text = element_text(face = "bold")
-  )
+# study3row
+# 0.0250000  0.3173252 -0.5969573  0.6469573  0.0050000  0.3371543 -0.6558224  0.6658224  0.0150000  0.3252365 -0.6224636  0.6524636
+
+# study50row
+# 0.1400000  0.3335185 -0.5136962  0.7936962  0.1750000  0.3239794 -0.4599997  0.8099997  0.1400000  0.3383623 -0.5231901  0.8031901
+
+
+
+
+
+
+
+
+
+
+
