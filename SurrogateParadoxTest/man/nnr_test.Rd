@@ -38,9 +38,6 @@ Desired alpha level of test.
 \item{s_hat}{Calculated value of test statistic.}
 \item{s_vec}{Vector of bootstrapped values of test statistic.}
 }
-\references{
-Hsiao et all 2024 (Under review)
-}
 \author{
 Emily Hsiao
 }

@@ -52,9 +52,6 @@
   where \eqn{P(\Delta_B) < \alpha} with given data and parameters highlighted in blue.
 }
 
-\references{
-  Hsiao, Tian, Parast. "Resilience Measures for the Surrogate Paradox." (2025) Under Review.
-}
 
 \author{
   Emily Hsiao

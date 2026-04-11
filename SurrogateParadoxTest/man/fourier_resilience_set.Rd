@@ -56,10 +56,6 @@
   Returns a ggplot object with values of \eqn{\sigma_{11}^2} on the x-axis and \eqn{\sigma_{22}^2} on the y-axis,   and regions where \eqn{P(\Delta_B) < \alpha} with given data and parameters highlighted in blue.
 }
 
-\references{
-  Hsiao, Tian, Parast. "Resilience Measures for the Surrogate Paradox." (2025) Under Review.
-}
-
 \author{
   Emily Hsiao
 }

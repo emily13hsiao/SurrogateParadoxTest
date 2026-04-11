@@ -67,8 +67,6 @@ Number of bootstrap samples for nnr test.
 Barrett, Garry F., and Stephen G. Donald. "Consistent tests for stochastic dominance." Econometrica 71.1 (2003): 71-104.
 
 Hall, Peter, and Nancy E. Heckman. "Testing for monotonicity of a regression mean by calibrating for linear functions." Annals of Statistics (2000): 20-39.
-
-Hsiao, Tian, Parast. "Avoiding the Surrogate Paradox: An Empirical Framework for Assessing Assumptions." 2025 (Under Review)
 }
 
 \examples{
@@ -82,12 +80,12 @@ s_t <- rnorm(100, 3, 1)
 y_t <- sapply(s_t, function(s) rnorm(1, m_t(s), 1))
 
 test_assumptions(
-s0 = s_c, y0 = y_t, s1 = s_t, y1 = y_t, type = "sd"
+s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = "sd"
 )
 
 \donttest{
 test_assumptions(
-s0 = s_c, y0 = y_t, s1 = s_t, y1 = y_t, type = "all")
+s0 = s_c, y0 = y_c, s1 = s_t, y1 = y_t, type = "all")
 }
 }
 

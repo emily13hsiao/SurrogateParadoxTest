@@ -36,7 +36,7 @@
     Length-4 vector governing the variance of the random coefficients of the mean function for Study B.
   }
   \item{n.iter}{
-    Number of \eqn{\Delta_B} samples to generate.
+    Number of \eqn{\Delta_B} samples to generate; should be large.
   }
   \item{M}{
     Number of bootstrap iterations to estimate the SE of \eqn{\hat{p}_0} and \eqn{\hat{q}_\alpha}.
@@ -71,23 +71,23 @@
   \item{treatment_plot}{Plot including data points of treatment group of Study A and functions generated for             Study B; only returned if plot = TRUE.}
 }
 
-\references{
-  Hsiao, Tian, Parast. "Resilience Measures for the Surrogate Paradox." (2025) Under Review.
-}
 
 \author{
   Emily Hsiao
 }
 
 \examples{
-  s0.A <- rnorm(20, 3, sqrt(3))
+\donttest{
+  n.example = 200
+  s0.A <- rnorm(n.example, 3, sqrt(3))
   y0.A <- sapply(s0.A, function(x) 2 * x - 1)
-  s1.A <- rnorm(20, 4, sqrt(3))
+  s1.A <- rnorm(n.example, 4, sqrt(3))
   y1.A <- sapply(s1.A, function(x) x + 3)
-  s0.B <- rnorm(20, 4.75, sqrt(1))
-  s1.B <- rnorm(20, 5.25, sqrt(1))
+  s0.B <- rnorm(n.example, 4.75, sqrt(1))
+  s1.B <- rnorm(n.example, 5.25, sqrt(1))
   result <- polynomial_interval(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, 
-  var_vec = c(0.25, 0.25, 0.1, 0.1),n.iter = 20, M = 20)
+  var_vec = c(0.25, 0.25, 0.1, 0.1),n.iter = 100, M = 20)
   result$p_hat
+}
 }
 

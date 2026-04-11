@@ -40,7 +40,7 @@
     Smoothness parameter of the Gaussian Process.
   }
   \item{n.iter}{
-    Number of \eqn{\Delta_B} samples to generate.
+    Number of \eqn{\Delta_B} samples to generate; should be large.
   }
   \item{M}{
     Number of bootstrap iterations to estimate the SE of \eqn{\hat{p}_0} and \eqn{\hat{q}_\alpha}.
@@ -77,23 +77,24 @@
   \item{p_interval}{Inner 95\% of \eqn{\hat{p}_0} samples from bootstrap; only returned if intervals = TRUE.}
   \item{q_interval}{Inner 95\% of \eqn{\hat{q}_\alpha} samples from bootstrap; only returned if intervals = TRUE.}
 }
-\references{
-  Hsiao, Tian, Parast. "Resilience Measures for the Surrogate Paradox." (2025) Under Review.
-}
+
 \author{
   Emily Hsiao
 }
 
 \examples{
-  s0.A <- rnorm(20, 3, sqrt(3))
+\donttest{
+  n.example = 200
+  s0.A <- rnorm(n.example, 3, sqrt(3))
   y0.A <- sapply(s0.A, function(x) 2 * x - 1)
-  s1.A <- rnorm(20, 4, sqrt(3))
+  s1.A <- rnorm(n.example, 4, sqrt(3))
   y1.A <- sapply(s1.A, function(x) x + 3)
-  s0.B <- rnorm(20, 4.75, sqrt(1))
-  s1.B <- rnorm(20, 5.25, sqrt(1))
+  s0.B <- rnorm(n.example, 4.75, sqrt(1))
+  s1.B <- rnorm(n.example, 5.25, sqrt(1))
   result <- gaussian_process_interval(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, sigma2 = 0.25, 
-    theta = 2, n.iter = 20, M = 20)
+    theta = 2, n.iter = 100, M = 20)
   result$p_hat
+}
 }
 
 
