@@ -13,7 +13,7 @@ library(MASS)
 
 The package **SurrogateParadoxTest** contains functions that serve two main purposes. The first purpose is to test assumptions that protect against the surrogate paradox. The second purpose is to estimate measures of resilience to the surrogate paradox. We will walk through examples using the functions in the **SurrogateParadoxTest** package. 
 
-First, install the package and load it. The package version on CRAN (Version 2.0) does not yet include the resilience measures. Version 2.2 on Github does include resilience measures, so we will load that version here. This package requires the **MonotonicityTest** package (along with other packages). For this package in particular, if you see error messages about a fortran compiler, please see: https://cran.r-project.org/bin/macosx/tools/ We also load **ggplot2** for plots made later in the document.
+First, install the package from either GitHub (Version 2.2) or CRAN, and load it. This package requires the **MonotonicityTest** package (along with other packages). For this package in particular, if you see error messages about a fortran compiler, please see: https://cran.r-project.org/bin/macosx/tools/ We also load **ggplot2** for plots made later in the document.
 
 ```{r results = "hide", message=FALSE}
 library(devtools)
