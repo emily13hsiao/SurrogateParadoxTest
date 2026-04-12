@@ -13,7 +13,7 @@ library(MASS)
 
 The package **SurrogateParadoxTest** contains functions that serve two main purposes. The first purpose is to test assumptions that protect against the surrogate paradox. The second purpose is to estimate measures of resilience to the surrogate paradox. We will walk through examples using the functions in the **SurrogateParadoxTest** package. 
 
-First, install the package and load it. The package version on CRAN (Version 2.0) does not yet include the resilience measures. Version 2.1 on Github does include resilience measures, so we will load that version here. This package requires the **MonotonicityTest** package (along with other packages). For this package in particular, if you see error messages about a fortran compiler, please see: https://cran.r-project.org/bin/macosx/tools/ We also load **ggplot2** for plots made later in the document.
+First, install the package and load it. The package version on CRAN (Version 2.0) does not yet include the resilience measures. Version 2.2 on Github does include resilience measures, so we will load that version here. This package requires the **MonotonicityTest** package (along with other packages). For this package in particular, if you see error messages about a fortran compiler, please see: https://cran.r-project.org/bin/macosx/tools/ We also load **ggplot2** for plots made later in the document.
 
 ```{r results = "hide", message=FALSE}
 library(devtools)
@@ -129,7 +129,7 @@ data_t$y <- F1(data_t$x)
 p <- ggplot() + 
   geom_line(data = data_c, aes(x = x, y = y, colour = "red")) +
   geom_line(data = data_t, aes(x = x, y = y, colour = "blue")) +
-  scale_colour_identity("Treated Group", guide = "legend", 
+  scale_colour_identity("Group", guide = "legend", 
                         labels = c("Control Group", "Treated Group"), 
                         breaks = c("red", "blue")) +
   ylab("Empirical CDF") +
@@ -256,7 +256,7 @@ print(results$treatment_plot)
 
 Now let's take a look at the **fourier_interval** function. The basic idea of generating new functions is the same, but now we assume that the functions in Study B are generated as deviations from the estimated conditional mean in Study A governed by a fourier series specification. This specification involves two sets of parameters, $\Sigma$ which is the variance/covariance matrix for the coefficients, and $B$ which reflects the period of the sin and cosine terms. Here we assume that $\Sigma$ is restricted to diagonal matrices of length 4.
 
-To use this function, the parameters you need are the S and Y data from the treatment and control group in Study A (**s0.A, y0.A, s1.A, y1.A**), the S values of the treatment and control group in Study B (**s0.B, s1.B**), the variance vector which compose the diagonal elements of $Sigma$ (var_vec), and a length-3 vector $B$ (period). The elements of the period vector represent proportions of the width of the support of $S$ values in Study A. Let's take a look at an example.
+To use this function, the parameters you need are the S and Y data from the treatment and control group in Study A (**s0.A, y0.A, s1.A, y1.A**), the S values of the treatment and control group in Study B (**s0.B, s1.B**), the variance vector which composes the diagonal elements of $Sigma$ (var_vec), and a length-3 vector $B$ (period). The elements of the period vector represent proportions of the width of the support of $S$ values in Study A. Let's take a look at an example.
 
 ```{r}
 var_vec <- c(0.20, 0.20, 0.1, 0.1)
@@ -282,7 +282,7 @@ print(result$treatment_plot)
 
 Now, let's move on to our third resilience interval function, **polynomial_interval**. Here, we assume that the functions in Study B are generated as deviations from the estimated conditional mean in Study A governed by a polynomial specification. This specification involves the parameter $\Sigma$ which is the variance/covariance matrix for the coefficients, and we restrict $\Sigma$ to be a diagonal matrix of 4 elements.  We also restrict to degree-3 polynomials.
 
-To use this function, the parameters you need are the S and Y data from the treatment and control group in Study A (**s0.A, y0.A, s1.A, y1.A**), the S values of the treatment and control group in Study B (**s0.B, s1.B**), and the variance vector which compose the diagonal elements of $Sigma$ (**var_vec**).
+To use this function, the parameters you need are the S and Y data from the treatment and control group in Study A (**s0.A, y0.A, s1.A, y1.A**), the S values of the treatment and control group in Study B (**s0.B, s1.B**), and the variance vector which composes the diagonal elements of $Sigma$ (**var_vec**).
 
 ```{r}
 var_vec <- c(0.25, 0.25, 0.1, 0.1)
@@ -346,6 +346,58 @@ sig2_values <- seq(0.01, 0.4, length.out = 100)
 
 polynomial_resilience_set(s0.A, y0.A, s1.A, y1.A, s0.B, s1.B, sig1_values, sig2_values)
 ```
+
+# Resilience Probability: Meta-Analytic Setting
+
+The function **meta_analytic_resilience** can calculate the resilience probability for the special setting in which you have many prior studies i.e., many "Study A" studies. This function uses a Gaussian Process class, as described above, but is able to estimate the variance parameters based on the prior studies. Therefore, the user does not need to specify the variance parameters. This method is described in Hsiao E and Parast L, "A Functional-Class Meta-Analytic Framework for Quantifying Surrogate Resilience" (Under Review).
+
+Let's take a look at the example. The dataset **dataA** contains hypothetical data from 25 prior studies. Each dataset includes measurements on the surrogate (S), primary outcome (Y), and treatment group (G). The format of this dataset is exactly the format that the function will require. 
+
+```{r}
+data(dataA)
+names(dataA)
+head(dataA)
+table(dataA$study)
+```
+
+The dataset **dataB** contains hypothetical data from a new trial where only surrogate values in the control group (s0.B) and surrogate values in the treated group were measured (s1.B). 
+
+```{r}
+data(dataB)
+names(dataB)
+head(dataB)
+```
+
+The **meta_analytic_resilience** function calculates the resilience probability for the new study (**dataB**) using the information learned from the prior studies (**dataA**) and assuming a Gaussian Process function class. The function uses random data generation and thus, we set a seed to ensure reproducibility. The primary arguments, besides the data, are the degree for the mean function (**degree**), whether a spline should be used for the mean function (**use_spline**), whether the standard error should be estimated (**calculate_se**) and if so, whether the analytic standard error should be calculated (**try_analytic**). Below, we apply this function first with degree = 1 (linear), no splines, and no standard error.  
+
+```{r}
+set.seed(1)
+result = meta_analytic_resilience(data=dataA, s0.B = dataB$s0.B, s1.B = dataB$s1.B, 
+degree = 1, use_spline = FALSE, calculate_se = FALSE)
+result
+```
+
+Next, we apply the function with degree = 1 (linear), with splines, and with standard error estimation using the analytic estimator.
+
+```{r}
+set.seed(1)
+result = meta_analytic_resilience(data=dataA, s0.B = dataB$s0.B, s1.B = dataB$s1.B, 
+degree = 1, use_spline = TRUE, calculate_se = TRUE, try_analytic = TRUE)
+result
+```
+
+Lastly, we apply the function with degree = 3 (cubic), with splines, and with standard error estimation using the nonparametric boostrap.
+
+```{r}
+#apply function, uncertainty quantification, bootstrap SE
+set.seed(1)
+result = meta_analytic_resilience(data=dataA, s0.B = dataB$s0.B, s1.B = dataB$s1.B, 
+degree = 3, use_spline = TRUE, calculate_se = TRUE, try_analytic = FALSE)
+result
+```
+
+Regardless of the estimation approach, these results show a large probability of the surrogate paradox in the new study. 
+
 
 That's all for now!
 
