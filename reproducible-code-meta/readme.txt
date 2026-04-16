@@ -58,7 +58,7 @@ Open the readin_file.R. Set n.study, and n.each to match your specifications for
 # -------------------------------
 # -------------------------------
 
-The PAB SE runs much faster and hence, we do not use multiple scripts. Open pab-simulations.R and set the setting=1 and run the file. Next, set setting=2, run the file. Go on until and including setting =6. After all 6 have run, use the pab-table.R script which will read in the output and produce the PAB table. Note that the true values are hard-coded into this final file.  
+The PAB SE runs much faster and hence, we do not use multiple scripts. Open pab-simulations.R and set the setting=1 and run the file. Next, set setting=2, run the file. Go on until and including setting =6. After all 6 have run, use the pab-table.R script which will read in the output and produce the PAB table.
 
 
 # -------------------------------
