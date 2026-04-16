@@ -35,7 +35,7 @@ mean(p_list)
 sd(p_list)
 mean(se_list)
 
-saveRDS(results_list, file = paste0("simulation-results-analytic/setting", setting, "spline", use_spline, "degree", degree, "results.RDS"))
+saveRDS(results_list, file = paste0("setting", setting, "spline", use_spline, "degree", degree, "results.RDS"))
 
 
 
