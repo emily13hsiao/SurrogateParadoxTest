@@ -1,14 +1,16 @@
 # Sims with SE read-in and table for PAB
 
-truth <- c(0.586, 0.770, 0.507, 0.029, 0.078, 0.000)
-elliott <- c(0.498, 0.434, 0.500, 0.182, 0.413, 0.207)
+n.study = 10
+n.each = 100
+
+truth = read.table(paste0("truep_", n.study, n.each, ".txt"), header=T)
 
 # Linear Table
 linear_table <- matrix(NA, nrow = 6, ncol = 5)
 spline <- FALSE
 degree <- 1
 for (setting in 1:6) {
-  results <- readRDS(paste0("simulation-results-analytic/setting", setting, "spline", spline, "degree", degree, "results.RDS"))
+  results <- readRDS(paste0("setting", setting, "spline", spline, "degree", degree, "results.RDS"))
   p_list <- rep(NA, 1000)
   se_list <- rep(NA, 1000)
   coverage <- rep(NA, 1000)
@@ -29,7 +31,7 @@ cubic_table <- matrix(NA, nrow = 6, ncol = 5)
 spline <- FALSE
 degree <- 3
 for (setting in 1:6) {
-  results <- readRDS(paste0("simulation-results-analytic/setting", setting, "spline", spline, "degree", degree, "results.RDS"))
+  results <- readRDS(paste0("setting", setting, "spline", spline, "degree", degree, "results.RDS"))
   p_list <- rep(NA, 1000)
   se_list <- rep(NA, 1000)
   coverage <- rep(NA, 1000)
@@ -50,7 +52,7 @@ spline_table <- matrix(NA, nrow = 6, ncol = 5)
 spline <- TRUE
 degree <- 3
 for (setting in 1:6) {
-  results <- readRDS(paste0("simulation-results-analytic/setting", setting, "spline", spline, "degree", degree, "results.RDS"))
+  results <- readRDS(paste0("setting", setting, "spline", spline, "degree", degree, "results.RDS"))
   p_list <- rep(NA, 100)
   se_list <- rep(NA, 100)
   coverage <- rep(NA, 100)
@@ -67,7 +69,7 @@ for (setting in 1:6) {
 spline_table
 
 # Full table
-full_table <- round(cbind(truth, linear_table, cubic_table, spline_table, elliott), 3)
+full_table <- round(cbind(truth, linear_table, cubic_table, spline_table), 3)
 full_table
 
 
