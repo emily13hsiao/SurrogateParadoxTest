@@ -15,7 +15,7 @@ if(n.study == 10) {tp = "100"}
 true.p = read.table(paste0("truep_", n.study, n.each, ".txt"), header=T)
 
 check_in = function(vec, true) {
- 	return(1*(vec[1]<true & vec[2] > true))
+ 	return(1*(vec[1]<=true & vec[2] >= true))
 }
 
 # -------------------------------
